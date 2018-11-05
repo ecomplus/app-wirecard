@@ -34,5 +34,5 @@ app.get('/keys', routes.autentication.getKey)
 app.post('/customers', routes.customers.new)
 app.post('/payments/list', routes.payments.list)
 app.post('/payments/create', routes.payments.create)
-
+app.post('/auth/callback', routes.autentication.app)
 app.listen(port)
