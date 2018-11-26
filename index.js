@@ -2,7 +2,7 @@ const bodyParser = require('body-parser')
 const express = require('express')
 const routes = require('./lib/routes')
 const app = express()
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 4000
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
@@ -35,3 +35,5 @@ app.post('/payments/create', routes.payments.create)
 app.post('/auth/callback', routes.autentication.app)
 app.post('/notifications/:storeId', routes.webhooks.post)
 app.listen(port)
+
+require('./lib/task')
