@@ -16,7 +16,7 @@ process.on('uncaughtException', (err) => {
   }
 
   let fs = require('fs')
-  fs.appendFile('./_stderr', msg, () => {
+  fs.appendFile('/var/log/nodejs/_stderr', msg, () => {
     process.exit(1)
   })
 })
