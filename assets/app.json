@@ -1,0 +1,94 @@
+{
+  "app_id": 1238,
+  "title": "Wirecard",
+  "slug": "wirecard",
+  "paid": false,
+  "version": "1.0.1",
+  "type": "external",
+  "github_repository": "https://github.com/ecomclub/app-wirecard",
+  "authentication": true,
+  "auth_callback_uri": "https://wirecard.ecomplus.biz/callback",
+  "auth_scope": {
+    "orders": [
+      "GET",
+      "POST"
+    ],
+    "orders/payments_history": [
+      "GET",
+      "POST",
+      "PATCH"
+    ]
+  },
+  "state": "active",
+  "status": "active",
+  "created_at": "2018-11-21T22:51:24.983Z",
+  "modules": {
+    "list_payments": {
+      "enabled": true,
+      "endpoint": "https://wirecard.ecomplus.biz/payments/list"
+    },
+    "create_transaction": {
+      "enabled": true,
+      "endpoint": "https://wirecard.ecomplus.biz/payments/create"
+    }
+  },
+  "hidden_data": {
+    "payment_options": [
+      {
+        "name": "Cartão Credito",
+        "type": "credit_card",
+        "payment_type": "payment",
+        "installments": [
+          {
+            "number": 12,
+            "tax": true,
+            "tax_value": 0.5
+          },
+          {
+            "number": 6,
+            "tax": false
+          }
+        ],
+        "intermediator": {
+          "code": "wirecard",
+          "link": "https://www.wirecard.com.br",
+          "name": "Wirecard"
+        },
+        "url": "https://www.wiredcard.com.br/payment"
+      },
+      {
+        "name": "Boleto Bancário",
+        "type": "banking_billet",
+        "payment_type": "payment",
+        "discount": {
+          "value": 0.1,
+          "type": "percentage"
+        },
+        "expiration_date": 14,
+        "intermediator": {
+          "code": "wirecard",
+          "link": "https://www.wirecard.com.br",
+          "name": "Wirecard"
+        },
+        "url": "https://www.wiredcard.com.br/payment"
+      },
+      {
+        "name": "Débito Online",
+        "type": "online_debit",
+        "payment_type": "payment",
+        "discount": {
+          "value": 0.15,
+          "type": "percentage"
+        },
+        "intermediator": {
+          "code": "wirecard",
+          "link": "https://www.wirecard.com.br",
+          "name": "Wirecard"
+        },
+        "url": "https://www.wiredcard.com.br/payment"
+      }
+    ],
+    "sandbox": false,
+    "statement_descriptor": "Wirecard - ECP"
+  }
+}
