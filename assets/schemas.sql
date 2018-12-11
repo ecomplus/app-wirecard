@@ -39,8 +39,7 @@ IF NOT EXISTS wirecard_app_auth
 (CURRENT_TIMESTAMP),
       store_id      INTEGER  UNIQUE
                                NOT NULL,
-      w_access_token  STRING   NOT NULL
-                               UNIQUE,
+      w_access_token  STRING   NOT NULL,
       w_refresh_token STRING   NOT NULL,
       w_expires_in    DATE,
       w_scope         STRING,
