@@ -42,7 +42,7 @@
           {
             "number": 12,
             "tax": true,
-            "tax_value": 0.5
+            "tax_value": 50
           },
           {
             "number": 6,
@@ -54,6 +54,7 @@
           "link": "https://www.wirecard.com.br",
           "name": "Wirecard"
         },
+        "icon": "https://ecom.nyc3.digitaloceanspaces.com/plus/assets/img/stamps/wirecard.png",
         "url": "https://www.wiredcard.com.br/payment"
       },
       {
@@ -61,7 +62,7 @@
         "type": "banking_billet",
         "payment_type": "payment",
         "discount": {
-          "value": 0.1,
+          "value": 10,
           "type": "percentage"
         },
         "expiration_date": 14,
@@ -77,7 +78,7 @@
         "type": "online_debit",
         "payment_type": "payment",
         "discount": {
-          "value": 0.15,
+          "value": 10,
           "type": "percentage"
         },
         "intermediator": {
@@ -88,7 +89,7 @@
         "url": "https://www.wiredcard.com.br/payment"
       }
     ],
-    "sandbox": false,
+    "sandbox": true,
     "statement_descriptor": "Wirecard - ECP"
   }
 }
