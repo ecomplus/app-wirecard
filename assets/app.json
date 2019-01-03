@@ -25,11 +25,11 @@
   "modules": {
     "list_payments": {
       "enabled": true,
-      "endpoint": "https://wirecard.ecomplus.biz/payments/list"
+      "endpoint": "https://wirecard.ecomplus.biz/payment"
     },
     "create_transaction": {
       "enabled": true,
-      "endpoint": "https://wirecard.ecomplus.biz/payments/create"
+      "endpoint": "https://wirecard.ecomplus.biz/payment"
     }
   },
   "hidden_data": {
@@ -71,6 +71,11 @@
           "link": "https://www.wirecard.com.br",
           "name": "Wirecard"
         },
+        "instruction_lines": {
+          "first": "Atenção",
+          "second": "fique atento à data de vencimento do boleto.",
+          "third": "Pague em qualquer casa lotérica."
+        },
         "url": "https://www.wiredcard.com.br/payment"
       },
       {
@@ -90,6 +95,6 @@
       }
     ],
     "sandbox": true,
-    "statement_descriptor": "Wirecard - ECP"
+    "statement_descriptor": "Loja teste"
   }
 }
