@@ -87,7 +87,8 @@
         "payment_type": "payment",
         "discount": {
           "value": 10,
-          "type": "percentage"
+          "type": "percentage",
+          "default": true
         },
         "intermediator": {
           "code": "wirecard",
