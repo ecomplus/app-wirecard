@@ -17,6 +17,9 @@
       "GET",
       "POST",
       "PATCH"
+    ],
+    "procedures":[
+      "POST"
     ]
   },
   "state": "active",
