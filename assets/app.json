@@ -98,6 +98,11 @@
         "url": "https://www.wiredcard.com.br/payment"
       }
     ],
+    "sort": [
+      "online_debit",
+      "credit_card",
+      "banking_billet"
+    ],
     "sandbox": true,
     "statement_descriptor": "Loja teste"
   }
