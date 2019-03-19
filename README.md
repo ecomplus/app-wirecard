@@ -14,3 +14,13 @@ WC_REDIRECT_URI  | Callback url
 WC_SCOPE | Wirecard oath scope
 TABLE_NAME | app table name
 BD_PATH | db path
+
+## Production server
+
+Published at https://wirecard.ecomplus.biz
+
+### Continuous deployment
+
+When app version is **production ready**,
+[create a new release](https://github.com/ecomclub/app-wirecard/releases)
+to run automatic deploy from `master` branch.
