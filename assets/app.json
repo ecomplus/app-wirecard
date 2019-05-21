@@ -6,6 +6,193 @@
   "version": "1.0.1",
   "type": "external",
   "github_repository": "https://github.com/ecomclub/app-wirecard",
+  "admin_settings": {
+    "payment_options": {
+      "schema": {
+        "type": "array",
+        "title": "Formas de Pagamento Wirecard",
+        "items": {
+          "type": "object",
+          "title": "The Items Schema",
+          "required": [
+            "name",
+            "type",
+            "payment_type",
+            "installments",
+            "intermediator",
+            "icon",
+            "url"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "title": "Rótulo do pagamento",
+              "default": "",
+              "examples": [
+                "Cartão Credito"
+              ],
+              "pattern": "^(.*)$"
+            },
+            "type": {
+              "type": "string",
+              "title": "Tipo de pagmento",
+              "default": "",
+              "examples": [
+                "credit_card"
+              ],
+              "pattern": "^(.*)$"
+            },
+            "payment_type": {
+              "type": "string",
+              "title": "Modelo de pagamento",
+              "default": "payment",
+              "examples": [
+                "payment"
+              ],
+              "pattern": "^(.*)$"
+            },
+            "installments": {
+              "type": "array",
+              "title": "Parcelamento",
+              "items": {
+                "type": "object",
+                "title": "The Items Schema",
+                "required": [
+                  "number",
+                  "tax",
+                  "tax_value"
+                ],
+                "properties": {
+                  "number": {
+                    "type": "integer",
+                    "title": "Quantidade de parcelas",
+                    "default": 0,
+                    "examples": [
+                      12
+                    ]
+                  },
+                  "tax": {
+                    "type": "boolean",
+                    "title": "Taxa",
+                    "default": false,
+                    "examples": [
+                      true
+                    ]
+                  },
+                  "tax_value": {
+                    "type": "integer",
+                    "title": "Valor da taxa",
+                    "default": 0,
+                    "examples": [
+                      50
+                    ]
+                  }
+                }
+              }
+            },
+            "intermediator": {
+              "type": "object",
+              "title": "Intermediador",
+              "required": [
+                "code",
+                "link",
+                "name"
+              ],
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "title": "Código do Intermediador",
+                  "default": "",
+                  "examples": [
+                      "wirecard"
+                  ],
+                  "pattern": "^(.*)$"
+                },
+                "link": {
+                  "type": "string",
+                  "title": "Link do Intermediador",
+                  "default": "",
+                  "examples": [
+                      "https://www.wirecard.com.br"
+                  ],
+                  "pattern": "^(.*)$"
+                },
+                "name": {
+                  "type:": "string",
+                  "title": "The Name Schema",
+                  "default": "",
+                  "examples": [
+                    "Wirecard"
+                  ],
+                  "pattern": "^(.*)$"
+                }
+              }
+            },
+            "icon": {
+              "type": "string",
+              "title": "Imagem do ícone de pagament",
+              "default": "",
+              "examples": [
+                "https://ecom.nyc3.digitaloceanspaces.com/plus/assets/img/stamps/wirecard.png"
+              ],
+              "pattern": "^(.*)$"
+            },
+            "url": {
+              "type": "string",
+              "title": "The Url Schema",
+              "default": "",
+              "examples": [
+                "https://www.wiredcard.com.br/payment"
+              ],
+              "pattern": "^(.*)$"
+              }
+            }
+          }
+        },
+        "hide": true,
+      },
+      "sort": {
+        "schema": {
+          "type": "array",
+            "title": "The Sort Schema",
+            "items": {
+              "type": "string",
+              "title": "The Items Schema",
+              "default": "",
+              "examples": [
+                "online_debit",
+                "credit_card",
+                "banking_billet"
+              ],
+              "pattern": "^(.*)$"
+            }
+        },
+        "hide": true,
+      },
+      "sandbox": {
+        "schema": {
+          "type": "boolean",
+          "title": "The Sandbox Schema",
+          "default": false,
+          "examples": [
+            true
+          ]
+        },
+        "hide": true,
+      },
+        "statement_descriptor": {
+          "schema": {
+            "type": "string",
+            "title": "The Statement_descriptor Schema",
+            "default": "",
+            "examples": [
+              "Loja teste"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "hide": true,
+        }
+    },
   "authentication": true,
   "auth_callback_uri": "https://wirecard.ecomplus.biz/callback",
   "auth_scope": {
