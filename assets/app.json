@@ -13,7 +13,7 @@
         "title": "Formas de Pagamento Wirecard",
         "items": {
           "type": "object",
-          "title": "The Items Schema",
+          "title": "Configurações",
           "required": [
             "name",
             "type",
@@ -27,32 +27,19 @@
             "name": {
               "type": "string",
               "title": "Rótulo do pagamento",
-              "default": "",
-              "examples": [
-                "Cartão Credito"
-              ],
               "maxLength": 200,
-              "description": "Escreva o nome da forma de pagamento que aparecerá no checkout para seus clientes"
+              "description": "Escreva o nome da forma de pagamento que aparecerá no checkout para seus clientes. Por exemplo: Cartão de Crédito"
             },
             "type": {
               "type": "string",
               "title": "Tipo de pagmento",
-              "default": "",
-              "examples": [
-                "credit_card"
-              ],
-              "pattern": "^(.*)$",
               "description": "Informe o tipo de pagamento, ou seja, se é do tipo cartão de crédito, digite credit_card. Se for boleto, escreva banking_billet. Se for debito online, escreva online_debit"
             },
             "payment_type": {
               "type": "string",
               "title": "Modelo de pagamento",
               "default": "payment",
-              "examples": [
-                "payment"
-              ],
-              "pattern": "^(.*)$",
-              "description": "Digite o modelo de pagamento, ou seja, se é recorrência (assinatura) ou pagamentos"
+              "description": "Digite o modelo de pagamento, ou seja, se é recurrence (assinatura) ou payment (pagamentos)"
             },
             "installments": {
               "type": "array",
@@ -70,27 +57,18 @@
                     "type": "integer",
                     "title": "Quantidade de parcelas",
                     "default": 0,
-                    "examples": [
-                      12
-                    ],
                     "description": "Digite a quantidade de parcelas da forma de pagamento"
                   },
                   "tax": {
                     "type": "boolean",
                     "title": "Deseja utilizar taxa ?",
                     "default": false,
-                    "examples": [
-                      true
-                    ],
                     "description": "Marque como sim para utilizar taxas, ou não"
                   },
                   "tax_value": {
                     "type": "integer",
                     "title": "Valor da taxa",
                     "default": 0,
-                    "examples": [
-                      50
-                    ],
                     "description": "Insira o valor da taxa do parcelamento"
                   }
                 }
@@ -108,52 +86,31 @@
                 "code": {
                   "type": "string",
                   "title": "Slug do intermediador",
-                  "default": "",
-                  "examples": [
-                    "wirecard"
-                  ],
-                  "pattern": "^(.*)$"
                 },
                 "link": {
                   "type": "string",
                   "title": "Link do Intermediador",
-                  "default": "",
-                  "examples": [
-                    "https://www.wirecard.com.br"
-                  ],
-                  "pattern": "/(http(s?):)([/|.|\w|\s|-])*/.*/g",
-                  "description": "Digite o link da página inicial do intermediador de pagamento"
+                  "format": "uri",
+                  "description": "Digite o link da página inicial do intermediador de pagamento. Exemplo: https://www.wirecard.com.br"
                 },
                 "name": {
                   "type:": "string",
                   "title": "Nome do intermediador",
-                  "default": "",
-                  "examples": [
-                    "Wirecard"
-                  ],
-                  "pattern": "^(.*)$",
-                  "description": "Escreva o nome do intermediador que esteja utilizando"
+                  "description": "Escreva o nome do intermediador que esteja utilizando. Exemplo: wirecard"
                 }
               }
             },
             "icon": {
               "type": "string",
               "title": "Ícone do intermediador",
-              "default": "",
-              "examples": [
-                "https://ecom.nyc3.digitaloceanspaces.com/plus/assets/img/stamps/wirecard.png"
-              ],
-              "pattern": "/(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png|jpeg|psd|tiff)/g",
+              "format": "uri",
               "description": "Insira a URL do ícone ou a imagem que irá representar a forma de pagamento no checkout. Sugere-se inserir o logotipo do intermediador de pagamento"
             },
             "url": {
               "type": "string",
               "title": "URL da Forma de Pagamento",
-              "default": "",
-              "examples": [
-                "https://www.wiredcard.com.br/payment"
-              ],
-              "pattern": "/(http(s?):)([/|.|\w|\s|-])*/.*/g"
+              "description": "URL da forma de pagamento. Exemplo: https://www.wiredcard.com.br/payment",
+              "format": "uri"
             }
           }
         }
@@ -167,14 +124,7 @@
         "items": {
           "type": "string",
           "title": "Ordem de Pagamento",
-          "default": "",
-          "examples": [
-            "online_debit",
-            "credit_card",
-            "banking_billet"
-          ],
-          "pattern": "^(.*)$",
-          "description": "Defina a ordem das modalidades de pagamento que irão aparecer no checkout"
+          "description": "Defina a ordem das modalidades de pagamento que irão aparecer no checkout. Exemplo: online_debit, credit_card, banking_billet"
         }
       },
       "hide": true
@@ -183,10 +133,7 @@
       "schema": {
         "type": "boolean",
         "title": "API Sandbox",
-        "default": false,
-        "examples": [
-          true
-        ]
+        "default": false
       },
       "hide": true,
       "description": "Está em fase de teste? Utilize Sandbox, se já estiver em Live/Produção, ou seja, pronto para vender, marque como falso ou não"
@@ -195,11 +142,7 @@
       "schema": {
         "type": "string",
         "title": "Nome da Loja",
-        "default": "",
-        "examples": [
-          "Loja teste"
-        ],
-        "pattern": "^(.*)$"
+        "description": "Escreva o nome da sua loja. Exemplo: Loja Teste"
       },
       "hide": true
     }
