@@ -48,13 +48,16 @@ ecomAuth.then(appSdk => {
   ].forEach(route => router.post(route, require(`${routes}${route}`)(appSdk)))
 
   /* Add custom app routes here */
-  ;[
-    '/wirecard/auth-callback',
-    '/wirecard/request-auth'
-  ].forEach(route => {
-    router.get(route, require(`${routes}${route}`)(appSdk))
-  })
+  // ;[
+  //   '/wirecard/auth-callback',
+  //   '/wirecard/request-auth'
+  // ].forEach(route => {
+  //   router.get(route, require(`${routes}${route}`)(appSdk))
+  // })
 
+  // debug
+  router.get('/redirect', require(`${routes}/wirecard/request-auth`)(appSdk))
+  router.get('/callback', require(`${routes}/wirecard/auth-callback`)(appSdk))
   // wirecard notifications
   router.post('/wirecard/notifications/:storeId', require(`${routes}/wirecard/notifications`)(appSdk))
 
