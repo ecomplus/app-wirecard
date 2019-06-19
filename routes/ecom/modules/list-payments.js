@@ -1,50 +1,58 @@
 'use strict'
-module.exports.listPayments = payload => {
-  const { application, params } = payload
-  return new Promise(resolve => {
-    let list = application.hidden_data.payment_options.map(async paymentOption => {
-      let item = {}
-      if (!(item.discount = listPaymentSchema.discount(paymentOption, application))) {
-        delete item.discount
-      }
-      if (!(item.installment_options = listPaymentSchema.installment_options(paymentOption, params))) {
-        delete item.installment_options
-      }
-      if (!(item.intermediator = listPaymentSchema.intermediator(paymentOption))) {
-        delete item.intermediator
-      }
-      if (!(item.icon = listPaymentSchema.icon(paymentOption))) {
-        delete item.icon
-      }
-      if (paymentOption.type === 'credit_card') {
-        if (!(item.js_client = await listPaymentSchema.js_client())) {
-          delete item.js_client
+const logger = require('console-files')
+module.exports = () => {
+  return (req, res) => {
+    const { application, params } = req.body
+    return new Promise(resolve => {
+      let list = application.hidden_data.payment_options.map(async paymentOption => {
+        let item = {}
+        if (!(item.discount = listPaymentSchema.discount(paymentOption, application))) {
+          delete item.discount
         }
-      }
-      if (!(item.label = listPaymentSchema.label(paymentOption))) {
-        delete item.label
-      }
-      if (!(item.payment_method = listPaymentSchema.payment_method(paymentOption))) {
-        delete item.payment_method
-      }
-      if (!(item.payment_url = listPaymentSchema.payment_url(paymentOption))) {
-        delete item.payment_url
-      }
-      if (!(item.type = listPaymentSchema.type(paymentOption))) {
-        delete item.type
-      }
-      return item
+        if (!(item.installment_options = listPaymentSchema.installment_options(paymentOption, params))) {
+          delete item.installment_options
+        }
+        if (!(item.intermediator = listPaymentSchema.intermediator(paymentOption))) {
+          delete item.intermediator
+        }
+        if (!(item.icon = listPaymentSchema.icon(paymentOption))) {
+          delete item.icon
+        }
+        if (paymentOption.type === 'credit_card') {
+          if (!(item.js_client = await listPaymentSchema.js_client())) {
+            delete item.js_client
+          }
+        }
+        if (!(item.label = listPaymentSchema.label(paymentOption))) {
+          delete item.label
+        }
+        if (!(item.payment_method = listPaymentSchema.payment_method(paymentOption))) {
+          delete item.payment_method
+        }
+        if (!(item.payment_url = listPaymentSchema.payment_url(paymentOption))) {
+          delete item.payment_url
+        }
+        if (!(item.type = listPaymentSchema.type(paymentOption))) {
+          delete item.type
+        }
+        return item
+      })
+      Promise.all(list).then((gateways) => {
+        let options = listPaymentsOptions(application)
+        let promise = {
+          payment_gateways: gateways.sort(sortPayments(application)),
+          discount_options: options.discount_options,
+          interest_free_installments: options.interest_free_installments
+        }
+        res.send(promise)
+      })
+        .catch(e => {
+          logger.error('LIST_PAYMENT_PARSE', e)
+          return res.status(400).send(e)
+        })
+
     })
-    Promise.all(list).then((gateways) => {
-      let options = listPaymentsOptions(application)
-      let promise = {
-        payment_gateways: gateways.sort(sortPayments(application)),
-        discount_options: options.discount_options,
-        interest_free_installments: options.interest_free_installments
-      }
-      resolve(promise)
-    })
-  })
+  }
 }
 
 const listPaymentSchema = {
@@ -190,7 +198,7 @@ const listPaymentsOptions = application => {
   if (!discount) {
     discount = application.hidden_data.payment_options.find(hidden => hidden.type === 'banking_billet')
   }
-  console.log(discount)
+
   return {
     discount_options: {
       label: discount.name,
