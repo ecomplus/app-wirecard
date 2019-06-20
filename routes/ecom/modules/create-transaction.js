@@ -21,7 +21,7 @@ module.exports = () => {
       })
       // throw
       .catch(e => {
-        logger.log('CREATE_TRANSACTION', e)
+        logger.error('CREATE_TRANSACTION', e)
         return res.status(400).send('CREATE_TRANSACTION ' + e)
       })
   }
