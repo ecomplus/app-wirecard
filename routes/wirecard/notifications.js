@@ -4,7 +4,7 @@ const { internalApi } = require('./../../lib/Api/Api')
 const rq = require('request')
 module.exports = (appSdk) => {
   return (req, res) => {
-    const { storeId } = req.params.storeId
+    const { storeId } = req.params
     const { payment } = req.body.resource
     internalApi
       .then(api => {
@@ -28,7 +28,8 @@ module.exports = (appSdk) => {
           } else {
             // if notification exist,  get payment at wirecard to confirm if status
             // is different that status we have at database
-            let wirecardPayment = await getPayment(payment.id, wirecardAuth.wc_access_token)
+            let token = wirecardAuth.w_access_token
+            let wirecardPayment = await getPayment(payment.id, token)
 
             // parse json to obj
             wirecardPayment = JSON.parse(wirecardPayment)
@@ -51,7 +52,7 @@ module.exports = (appSdk) => {
               let transaction = order.transactions.find(transaction => transaction.intermediator.transaction_code === payment.id)
 
               // post new payments_history at order
-              resource = `orders/${order._id}/payments_history.js`
+              resource = `orders/${order._id}/payments_history.json`
               method = 'POST'
               let body = {
                 transaction_id: transaction._id,
@@ -73,12 +74,14 @@ module.exports = (appSdk) => {
             }
           }
         } catch (error) {
+          console.log(error)
           logger.error('[WIRECARD WEBHOOKS]', error)
-          return res.status(400)
+          return res.status(400).end()
         }
       })
       .catch(e => {
         logger.error(e)
+        return res.status(400).end()
       })
   }
 }
@@ -88,7 +91,7 @@ const getPayment = (paymentId, token) => {
     let path = (process.env.WC_SANDBOX) ? 'https://sandbox.moip.com.br' : 'https://moip.com.br'
     let resource = `${path}/v2/payments/${paymentId}`
     let options = {
-      method: 'POST',
+      method: 'GET',
       url: resource,
       headers: {
         'Content-Type': 'application/json',
@@ -97,7 +100,7 @@ const getPayment = (paymentId, token) => {
     }
     rq(options, (erro, resp, body) => {
       if (erro || resp.statusCode >= 400) {
-        reject(new Error(erro))
+        reject(new Error(body))
       }
 
       resolve(body)

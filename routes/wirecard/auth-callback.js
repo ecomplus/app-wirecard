@@ -43,7 +43,15 @@ module.exports = () => {
             let expiresIn = wirecardBody.expires_in
             let scope = wirecardBody.scope
             let accountId = wirecardBody.moipAccount.id
-            return api.addWirecardAuth(storeId, accessToken, refreshToken, expiresIn, scope, accountId)
+
+            api.getWirecardAuth(storeId)
+              .then(result => {
+                if (result) {
+                  return api.updateWirecardAuth(storeId, accessToken, refreshToken, expiresIn, scope, accountId)
+                } else {
+                  return api.addWirecardAuth(storeId, accessToken, refreshToken, expiresIn, scope, accountId)
+                }
+              })
           } catch (error) {
             throw error
           }
