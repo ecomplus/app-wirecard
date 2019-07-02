@@ -88,14 +88,14 @@ module.exports = (appSdk) => {
 
 const getPayment = (paymentId, token) => {
   return new Promise((resolve, reject) => {
-    let path = (process.env.WC_SANDBOX) ? 'https://sandbox.moip.com.br' : 'https://moip.com.br'
+    let path = (process.env.WC_SANDBOX) ? 'https://sandbox.moip.com.br' : 'https://api.moip.com.br'
     let resource = `${path}/v2/payments/${paymentId}`
     let options = {
       method: 'GET',
       url: resource,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'bearer ' + token
+        'Authorization': 'bearer ' + process.env.WC_ACCESS_TOKEN
       }
     }
     rq(options, (erro, resp, body) => {

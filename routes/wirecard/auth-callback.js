@@ -5,7 +5,7 @@ const logger = require('console-files')
 //
 const { internalApi } = require('./../../lib/Api/Api')
 //
-module.exports = () => {
+module.exports = (appSdk) => {
   return (req, res) => {
     internalApi
 
@@ -51,6 +51,36 @@ module.exports = () => {
                 } else {
                   return api.addWirecardAuth(storeId, accessToken, refreshToken, expiresIn, scope, accountId)
                 }
+              })
+              /** Save publicKey at application.data */
+              .then(() => {
+                let resource = (process.env.WC_SANDBOX === 'true') ? 'https://sandbox.moip.com.br' : 'https://api.moip.com.br'
+                let options = {
+                  method: 'GET',
+                  url: resource + `/v2/keys`,
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'bearer ' + accessToken
+                  }
+                }
+                rq.get(options, async (err, resp, body) => {
+                  if (err) {
+                    throw err
+                  }
+
+                  try {
+                    let auth = await appSdk.getAuth(storeId)
+                    let appId = auth.row.application_id
+                    let resource = `/applications/${appId}/data.json`
+                    let method = 'PATCH'
+                    let update = {
+                      public_key: body.keys.encryption
+                    }
+                    return appSdk.apiRequest(storeId, resource, method, update, auth)
+                  } catch (error) {
+                    throw error
+                  }
+                })
               })
           } catch (error) {
             throw error
