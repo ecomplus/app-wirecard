@@ -71,7 +71,7 @@ module.exports = (appSdk) => {
                   try {
                     let auth = await appSdk.getAuth(storeId)
                     let appId = auth.row.application_id
-                    let resource = `/applications/${appId}/data.json`
+                    let resource = `applications/${appId}/data.json`
                     let method = 'PATCH'
                     let update = {
                       public_key: body.keys.encryption
