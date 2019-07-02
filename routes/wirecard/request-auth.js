@@ -9,7 +9,7 @@ module.exports = () => {
       return res.status(400).send('X-Store-Id not found at request.')
     }
 
-    let appEnv = (process.env.WC_SANDBOX === 'true') ? 'https://connect-sandbox.' : 'https://connect.'
+    let appEnv = (process.env.WC_SANDBOX) ? 'https://connect-sandbox.' : 'https://connect.'
     let wirecardUri = appEnv + 'moip.com.br/oauth/authorize'
 
     let wirecardParams = qs.stringify({

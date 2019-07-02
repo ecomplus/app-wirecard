@@ -50,7 +50,6 @@ module.exports = () => {
           logger.error('LIST_PAYMENT_PARSE', e)
           return res.status(400).send(e)
         })
-
     })
   }
 }

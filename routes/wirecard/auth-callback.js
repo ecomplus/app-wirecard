@@ -13,7 +13,7 @@ module.exports = (appSdk) => {
 
       .then(api => {
         const { code, storeId } = req.query
-        let appEnv = (process.env.WC_SANDBOX === 'true') ? 'https://connect-sandbox.' : 'https://connect.'
+        let appEnv = (process.env.WC_SANDBOX) ? 'https://connect-sandbox.' : 'https://connect.'
         let wirecardUri = appEnv + 'moip.com.br/oauth/token'
 
         let reqOptions = {
@@ -54,7 +54,7 @@ module.exports = (appSdk) => {
               })
               /** Save publicKey at application.data */
               .then(() => {
-                let resource = (process.env.WC_SANDBOX === 'true') ? 'https://sandbox.moip.com.br' : 'https://api.moip.com.br'
+                let resource = (process.env.WC_SANDBOX) ? 'https://sandbox.moip.com.br' : 'https://api.moip.com.br'
                 let options = {
                   method: 'GET',
                   url: resource + `/v2/keys`,
