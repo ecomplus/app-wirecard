@@ -1,109 +1,37 @@
 {
-  "app_id": 1238,
-  "title": "Wirecard",
-  "slug": "wirecard",
-  "paid": false,
-  "version": "1.0.1",
-  "type": "external",
-  "github_repository": "https://github.com/ecomclub/app-wirecard",
-  "authentication": true,
-  "auth_callback_uri": "https://wirecard.ecomplus.biz/callback",
-  "auth_scope": {
-    "orders": [
-      "GET",
-      "POST"
-    ],
-    "orders/payments_history": [
-      "GET",
-      "POST",
-      "PATCH"
-    ],
-    "procedures":[
-      "POST"
-    ]
-  },
-  "state": "active",
-  "status": "active",
-  "created_at": "2018-11-21T22:51:24.983Z",
-  "modules": {
-    "list_payments": {
-      "enabled": true,
-      "endpoint": "https://wirecard.ecomplus.biz/payment"
+    "app_id": 1238,
+    "state": "active",
+    "title": "Wirecard",
+    "slug": "wirecard",
+    "paid": false,
+    "version": "1.0.1",
+    "version_date": "2019-06-19T00:00:00.000Z",
+    "type": "external",
+    "modules": {
+        "list_payments": {
+            "endpoint": "https://wirecard.ecomplus.biz/ecom/modules/list-payments",
+            "enabled": true
+        },
+        "create_transaction": {
+            "endpoint": "https://wirecard.ecomplus.biz/ecom/modules/create-transaction",
+            "enabled": true
+        }
     },
-    "create_transaction": {
-      "enabled": true,
-      "endpoint": "https://wirecard.ecomplus.biz/payment"
-    }
-  },
-  "hidden_data": {
-    "payment_options": [
-      {
-        "name": "Cartão Credito",
-        "type": "credit_card",
-        "payment_type": "payment",
-        "installments": [
-          {
-            "number": 12,
-            "tax": true,
-            "tax_value": 50
-          },
-          {
-            "number": 6,
-            "tax": false
-          }
+    "status": "active",
+    "authentication": true,
+    "auth_callback_uri": "https://wirecard.ecomplus.biz/ecom/auth-callback",
+    "auth_scope": {
+        "orders": [
+            "GET",
+            "POST"
         ],
-        "intermediator": {
-          "code": "wirecard",
-          "link": "https://www.wirecard.com.br",
-          "name": "Wirecard"
-        },
-        "icon": "https://ecom.nyc3.digitaloceanspaces.com/plus/assets/img/stamps/wirecard.png",
-        "url": "https://www.wiredcard.com.br/payment"
-      },
-      {
-        "name": "Boleto Bancário",
-        "type": "banking_billet",
-        "payment_type": "payment",
-        "discount": {
-          "value": 10,
-          "type": "percentage"
-        },
-        "expiration_date": 14,
-        "intermediator": {
-          "code": "wirecard",
-          "link": "https://www.wirecard.com.br",
-          "name": "Wirecard"
-        },
-        "instruction_lines": {
-          "first": "Atenção",
-          "second": "fique atento à data de vencimento do boleto.",
-          "third": "Pague em qualquer casa lotérica."
-        },
-        "url": "https://www.wiredcard.com.br/payment"
-      },
-      {
-        "name": "Débito Online",
-        "type": "online_debit",
-        "payment_type": "payment",
-        "discount": {
-          "value": 10,
-          "type": "percentage",
-          "default": true
-        },
-        "intermediator": {
-          "code": "wirecard",
-          "link": "https://www.wirecard.com.br",
-          "name": "Wirecard"
-        },
-        "url": "https://www.wiredcard.com.br/payment"
-      }
-    ],
-    "sort": [
-      "online_debit",
-      "credit_card",
-      "banking_billet"
-    ],
-    "sandbox": true,
-    "statement_descriptor": "Loja teste"
-  }
+        "orders/payments_history": [
+            "GET",
+            "POST",
+            "PATCH"
+        ],
+        "procedures": [
+            "POST"
+        ]
+    }
 }
