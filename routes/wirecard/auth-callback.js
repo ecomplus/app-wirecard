@@ -67,14 +67,14 @@ module.exports = (appSdk) => {
                   if (err) {
                     throw err
                   }
-
+                  let parse = JSON.parse(body)
                   try {
                     let auth = await appSdk.getAuth(storeId)
                     let appId = auth.row.application_id
                     let resource = `applications/${appId}/data.json`
                     let method = 'PATCH'
                     let update = {
-                      public_key: body.keys.encryption
+                      public_key: parse.keys.encryption
                     }
                     return appSdk.apiRequest(storeId, resource, method, update, auth)
                   } catch (error) {
