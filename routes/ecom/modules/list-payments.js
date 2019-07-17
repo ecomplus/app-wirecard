@@ -61,7 +61,17 @@ module.exports = () => {
                 discount_options: options.discount_options,
                 interest_free_installments: options.interest_free_installments
               }
-              res.send(promise)
+              res.send(promise)   let pubk = `
+              -----BEGIN PUBLIC KEY-----
+              MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAi1LS9ugi2ei1oRwauUH4
+              2WcIMZv71maQQ3zZ5DmCjxMgF1ZrgWr8yDyHSBXT1Jhf3DzVTU/Ww7gSQxsyElV9
+              75SV+TmUPVCht/eR7cMd13PR0Vcjd8Mf+krfXq+qD3oza5Mcj4x7b48Y/hzG0/se
+              eUeCm/Iayz5mfPsetPnBzozFhnjoozOQD/cSMn2FfNAABCVxlML7TQObt7IGG1Lb
+              y8PQo4m8lCSfypDVtPgR4sLcjcGwXVzflxGAvEx9x2sRDf/rFdunkRR1N9dqud6A
+              DVjxErgxws836ukitvrnBZaX/Cu7EpM3G9AgtgQGAySnvyEnV8l3g2Z/57unDJj+
+              /QIDAQAB
+              -----END PUBLIC KEY-----
+              `
             })
               .catch(e => {
                 logger.error('LIST_PAYMENT_PARSE', e)
@@ -106,7 +116,17 @@ const listPaymentSchema = {
       let parcelasComJuros
       let valorJuros
       payment.installments.map(installment => {
-        if (installment.tax === true) {
+        if (installment.tax === true) {   let pubk = `
+        -----BEGIN PUBLIC KEY-----
+        MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAi1LS9ugi2ei1oRwauUH4
+        2WcIMZv71maQQ3zZ5DmCjxMgF1ZrgWr8yDyHSBXT1Jhf3DzVTU/Ww7gSQxsyElV9
+        75SV+TmUPVCht/eR7cMd13PR0Vcjd8Mf+krfXq+qD3oza5Mcj4x7b48Y/hzG0/se
+        eUeCm/Iayz5mfPsetPnBzozFhnjoozOQD/cSMn2FfNAABCVxlML7TQObt7IGG1Lb
+        y8PQo4m8lCSfypDVtPgR4sLcjcGwXVzflxGAvEx9x2sRDf/rFdunkRR1N9dqud6A
+        DVjxErgxws836ukitvrnBZaX/Cu7EpM3G9AgtgQGAySnvyEnV8l3g2Z/57unDJj+
+        /QIDAQAB
+        -----END PUBLIC KEY-----
+        `
           parcelasComJuros = installment.number
           valorJuros = installment.tax_value / 100
         } else {
