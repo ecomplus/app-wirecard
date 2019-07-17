@@ -39,21 +39,21 @@ ecomAuth.then(appSdk => {
   const routes = './../routes'
   router.get('/', require(`${routes}/`)())
 
-  // base routes for E-Com Plus Store API
-  ;[
-    '/ecom/auth-callback',
-    '/ecom/webhook',
-    '/ecom/modules/create-transaction',
-    '/ecom/modules/list-payments'
-  ].forEach(route => router.post(route, require(`${routes}${route}`)(appSdk)))
+    // base routes for E-Com Plus Store API
+    ;[
+      '/ecom/auth-callback',
+      '/ecom/webhook',
+      '/ecom/modules/create-transaction',
+      '/ecom/modules/list-payments'
+    ].forEach(route => router.post(route, require(`${routes}${route}`)(appSdk)))
 
-  /* Add custom app routes here */
-  ;[
-    '/wirecard/auth-callback',
-    '/wirecard/request-auth'
-  ].forEach(route => {
-    router.get(route, require(`${routes}${route}`)(appSdk))
-  })
+    /* Add custom app routes here */
+    ;[
+      '/wirecard/auth-callback',
+      '/wirecard/request-auth'
+    ].forEach(route => {
+      router.get(route, require(`${routes}${route}`)(appSdk))
+    })
 
   // debug
   // router.get('/redirect', require(`${routes}/wirecard/request-auth`)(appSdk))

@@ -1,56 +1,79 @@
 'use strict'
 const logger = require('console-files')
+const { internalApi } = require('./../../../lib/Api/Api')
 module.exports = () => {
   return (req, res) => {
     const { application, params } = req.body
-    return new Promise(resolve => {
-      let list = application.hidden_data.payment_options.map(async paymentOption => {
-        let item = {}
-        if (!(item.discount = listPaymentSchema.discount(paymentOption, application))) {
-          delete item.discount
-        }
-        if (!(item.installment_options = listPaymentSchema.installment_options(paymentOption, params))) {
-          delete item.installment_options
-        }
-        if (!(item.intermediator = listPaymentSchema.intermediator(paymentOption))) {
-          delete item.intermediator
-        }
-        if (!(item.icon = listPaymentSchema.icon(paymentOption))) {
-          delete item.icon
-        }
-        if (paymentOption.type === 'credit_card') {
-          if (!(item.js_client = await listPaymentSchema.js_client())) {
-            delete item.js_client
+    const storeId = req.storeId
+    internalApi
+
+      .then(api => {
+        return api.getWirecardAuth(storeId)
+      })
+      .then(auth => {
+        if (auth) {
+          if (!application.hasOwnProperty('hidden_data') ||
+            (application.hasOwnProperty('hidden_data') && !application.hidden_data.hasOwnProperty('payment_options'))
+          ) {
+            res.send({
+              payment_gateways: []
+            })
           }
+
+          return new Promise(resolve => {
+            let list = application.hidden_data.payment_options.map(async paymentOption => {
+              let item = {}
+              if (!(item.discount = listPaymentSchema.discount(paymentOption, application))) {
+                delete item.discount
+              }
+              if (!(item.installment_options = listPaymentSchema.installment_options(paymentOption, params))) {
+                delete item.installment_options
+              }
+              if (!(item.intermediator = listPaymentSchema.intermediator(paymentOption))) {
+                delete item.intermediator
+              }
+              if (!(item.icon = listPaymentSchema.icon(paymentOption))) {
+                delete item.icon
+              }
+              if (paymentOption.type === 'credit_card') {
+                if (!(item.js_client = await listPaymentSchema.js_client(application))) {
+                  delete item.js_client
+                }
+              }
+              if (!(item.label = listPaymentSchema.label(paymentOption))) {
+                delete item.label
+              }
+              if (!(item.payment_method = listPaymentSchema.payment_method(paymentOption))) {
+                delete item.payment_method
+              }
+              if (!(item.payment_url = listPaymentSchema.payment_url(paymentOption))) {
+                delete item.payment_url
+              }
+              if (!(item.type = listPaymentSchema.type(paymentOption))) {
+                delete item.type
+              }
+              return item
+            })
+            Promise.all(list).then((gateways) => {
+              let options = listPaymentsOptions(application)
+              let promise = {
+                payment_gateways: gateways.sort(sortPayments(application)),
+                discount_options: options.discount_options,
+                interest_free_installments: options.interest_free_installments
+              }
+              res.send(promise)
+            })
+              .catch(e => {
+                logger.error('LIST_PAYMENT_PARSE', e)
+                return res.status(400).send(e)
+              })
+          })
+        } else {
+          res.status(401).send({
+            error: 'Authentication not found for x-store-id'
+          })
         }
-        if (!(item.label = listPaymentSchema.label(paymentOption))) {
-          delete item.label
-        }
-        if (!(item.payment_method = listPaymentSchema.payment_method(paymentOption))) {
-          delete item.payment_method
-        }
-        if (!(item.payment_url = listPaymentSchema.payment_url(paymentOption))) {
-          delete item.payment_url
-        }
-        if (!(item.type = listPaymentSchema.type(paymentOption))) {
-          delete item.type
-        }
-        return item
       })
-      Promise.all(list).then((gateways) => {
-        let options = listPaymentsOptions(application)
-        let promise = {
-          payment_gateways: gateways.sort(sortPayments(application)),
-          discount_options: options.discount_options,
-          interest_free_installments: options.interest_free_installments
-        }
-        res.send(promise)
-      })
-        .catch(e => {
-          logger.error('LIST_PAYMENT_PARSE', e)
-          return res.status(400).send(e)
-        })
-    })
   }
 }
 
@@ -124,18 +147,8 @@ const listPaymentSchema = {
       }
     }
   },
-  js_client: async () => {
-    let pubk = `
-      -----BEGIN PUBLIC KEY-----
-      MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAi1LS9ugi2ei1oRwauUH4
-      2WcIMZv71maQQ3zZ5DmCjxMgF1ZrgWr8yDyHSBXT1Jhf3DzVTU/Ww7gSQxsyElV9
-      75SV+TmUPVCht/eR7cMd13PR0Vcjd8Mf+krfXq+qD3oza5Mcj4x7b48Y/hzG0/se
-      eUeCm/Iayz5mfPsetPnBzozFhnjoozOQD/cSMn2FfNAABCVxlML7TQObt7IGG1Lb
-      y8PQo4m8lCSfypDVtPgR4sLcjcGwXVzflxGAvEx9x2sRDf/rFdunkRR1N9dqud6A
-      DVjxErgxws836ukitvrnBZaX/Cu7EpM3G9AgtgQGAySnvyEnV8l3g2Z/57unDJj+
-      /QIDAQAB
-      -----END PUBLIC KEY-----
-      `
+  js_client: async (application) => {
+    let pubk = application.data.public_key || ''
     return new Promise(resolve => {
       let onloadFunction = 'window.wirecardHash=function(n){return MoipSdkJs.MoipCreditCard.setPubKey(' + JSON.stringify(pubk) + ').setCreditCard({number:n.number,cvc:n.cvc,expirationMonth:n.month,expirationYear:n.year}).hash()},window.wirecardBrand=function(n){return MoipValidator.cardType(n.number)};'
       let schema = {
@@ -198,14 +211,19 @@ const listPaymentsOptions = application => {
     discount = application.hidden_data.payment_options.find(hidden => hidden.type === 'banking_billet')
   }
 
-  return {
-    discount_options: {
-      label: discount.name,
-      type: discount.discount.type,
-      value: discount.discount.value
-    },
-    interest_free_installments: freeInstallments
+  let discountOptions = {}
+
+  if (discount) {
+    discountOptions = {
+      discount_options: {
+        label: discount.name,
+        type: discount.discount.type,
+        value: discount.discount.value
+      },
+      interest_free_installments: freeInstallments
+    }
   }
+  return discountOptions
 }
 
 const sortPayments = (application) => {
