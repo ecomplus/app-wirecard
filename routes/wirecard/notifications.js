@@ -98,6 +98,7 @@ const getPayment = (paymentId, token) => {
         'Authorization': 'bearer ' + process.env.WC_ACCESS_TOKEN
       }
     }
+    logger.log(options)
     rq(options, (erro, resp, body) => {
       if (erro || resp.statusCode >= 400) {
         reject(new Error(body))
