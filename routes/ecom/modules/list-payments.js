@@ -148,19 +148,7 @@ const listPaymentSchema = {
     }
   },
   js_client: async (application) => {
-    let pubk =
-      `
-    -----BEGIN PUBLIC KEY-----
-    MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5qmFcBpBbz+VFHCJyIL5
-    3MkD2dOZSO+7OfOBNJDo8VDPVZrL1SwPlB1g946ClANRUXzXeg1eUwG8BH+aSrBH
-    5evAweHAMLjchz5k4Vpq2MKXK7DodzQOYyKexyVuad4xKVhjyZvt9OviWH1Wdetf
-    wG7W2gzB5bYIlyMr1zNXYJROqB8yCWcCjEsuQ+8lgXOCHXUFZOaNHdtK3B0DZPwX
-    O9rAvdBJqmXcFBNgqqfzBw8lTLpzaVZ2bXSYkOI10RErWJ8yT/RwrFGZ2mSQ9v8Z
-    zipplOt9fCikUsjQihfovk8+FnVdNEhlHxZR6zjgxsDS3ouRUB6k7zWFobLe61Ir
-    SwIDAQAB
-    -----END PUBLIC KEY-----
-    
-    `
+    let pubk = application.hidden_data.public_key
     return new Promise(resolve => {
       let onloadFunction = 'window.wirecardHash=function(n){return MoipSdkJs.MoipCreditCard.setPubKey(' + JSON.stringify(pubk) + ').setCreditCard({number:n.number,cvc:n.cvc,expirationMonth:n.month,expirationYear:n.year}).hash()},window.wirecardBrand=function(n){return MoipValidator.cardType(n.number)};'
       let schema = {
