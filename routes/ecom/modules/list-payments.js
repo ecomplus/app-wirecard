@@ -148,16 +148,18 @@ const listPaymentSchema = {
     }
   },
   js_client: async (application) => {
-    let pubk = `
-      -----BEGIN PUBLIC KEY-----
-      MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAn0mscV3nv2CC7/T9TcMy
-      qpc/kDLtiZ/35kJnxjvebg+q4r25426Fa1RHmE7Xhyn/L9CJ1tm8SIeUzJ9jhnOS
-      7LsyA5h8Iv9LnZzefmbtCo4B3h799yr4RDPKqI+zCdeBt3cp2pHk0tNPULDIH+uk
-      osGYFbRZKfHAIHpfz/EDtIPbk/uK26W7ObqEF4RMwUfT843kNINo0Ua8hKWtmrRH
-      vDp42FlzPD+vyh5aahLKjr7ynJbX9fssS4HQWnfWILeftrg4nLEopx45J7yQh3gN
-      Jyw0pxufwXrrFpRFjFI9emVLe2I5Xf17NW8+DWovzdOXeEEhF0jiIUrWP2D6QY/d
-      xQIDAQAB
-      -----END PUBLIC KEY-----
+    let pubk =
+      `
+    -----BEGIN PUBLIC KEY-----
+    MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5qmFcBpBbz+VFHCJyIL5
+    3MkD2dOZSO+7OfOBNJDo8VDPVZrL1SwPlB1g946ClANRUXzXeg1eUwG8BH+aSrBH
+    5evAweHAMLjchz5k4Vpq2MKXK7DodzQOYyKexyVuad4xKVhjyZvt9OviWH1Wdetf
+    wG7W2gzB5bYIlyMr1zNXYJROqB8yCWcCjEsuQ+8lgXOCHXUFZOaNHdtK3B0DZPwX
+    O9rAvdBJqmXcFBNgqqfzBw8lTLpzaVZ2bXSYkOI10RErWJ8yT/RwrFGZ2mSQ9v8Z
+    zipplOt9fCikUsjQihfovk8+FnVdNEhlHxZR6zjgxsDS3ouRUB6k7zWFobLe61Ir
+    SwIDAQAB
+    -----END PUBLIC KEY-----
+    
     `
     return new Promise(resolve => {
       let onloadFunction = 'window.wirecardHash=function(n){return MoipSdkJs.MoipCreditCard.setPubKey(' + JSON.stringify(pubk) + ').setCreditCard({number:n.number,cvc:n.cvc,expirationMonth:n.month,expirationYear:n.year}).hash()},window.wirecardBrand=function(n){return MoipValidator.cardType(n.number)};'

@@ -2,6 +2,7 @@
 const logger = require('console-files')
 const { internalApi } = require('./../../lib/Api/Api')
 const rq = require('request')
+
 module.exports = (appSdk) => {
   return (req, res) => {
     const { storeId } = req.params
