@@ -61,6 +61,10 @@ module.exports = () => {
                 discount_options: options.discount_options,
                 interest_free_installments: options.interest_free_installments
               }
+
+              if (promise.interest_free_installments <= 1) {
+                delete promise.interest_free_installments
+              }
               res.send(promise)
             })
               .catch(e => {
@@ -79,7 +83,7 @@ module.exports = () => {
 
 const listPaymentSchema = {
   discount: (payment, application) => {
-    if (payment.discount) {
+    if (payment.hasOwnProperty('discount') && Object.keys(payment.discount).length) {
       let discount = application.hidden_data.payment_options.filter(paymentOption => (paymentOption.hasOwnProperty('discount')))
         .reduce(service => {
           return {
