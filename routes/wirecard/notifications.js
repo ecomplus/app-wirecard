@@ -7,6 +7,7 @@ module.exports = (appSdk) => {
   return (req, res) => {
     const { storeId } = req.params
     const { payment } = req.body.resource
+    logger.log(JSON.stringify(req.body))
     internalApi
       .then(api => {
         return api.getWirecardAuth(storeId)
