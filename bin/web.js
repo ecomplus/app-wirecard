@@ -67,7 +67,7 @@ ecomAuth.then(appSdk => {
   logger.log(`--> Starting web app on port :${port}`)
 
   // checks if store was setup to receive wirecard webhooks
-  require('./../lib/wirecard-register-notifications')
+  require('./../lib/wirecard-register-notifications')(appSdk)
 })
 
 ecomAuth.catch(err => {
