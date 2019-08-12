@@ -13,25 +13,34 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
 const router = express.Router()
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3001
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+// E-Com Plus Store ID from request header
 app.use((req, res, next) => {
-  if (req.url.startsWith('/ecom/') && process.env.NODE_ENV === 'production') {
-    // check if request is comming from E-Com Plus servers
-    if (ecomServerIps.indexOf(req.get('x-real-ip')) === -1) {
-      res.status(403).send('Who are you? Unauthorized IP address')
-    } else {
-      // get E-Com Plus Store ID from request header
-      req.storeId = parseInt(req.get('x-store-id'), 10)
-      next()
+  if (req.url.startsWith('/ecom/')) {
+    // get E-Com Plus Store ID from request header
+    req.storeId = parseInt(req.get('x-store-id'), 10)
+    if (req.url.startsWith('/ecom/modules/')) {
+      // request from Mods API
+      // https://github.com/ecomclub/modules-api
+      const { body } = req
+      if (typeof body !== 'object' || body === null || !body.params || !body.application) {
+        return res.status(406).send('Request not comming from Mods API? Invalid body')
+      }
     }
-  } else {
-    // bypass
-    next()
+
+    // on production check if request is comming from E-Com Plus servers
+    if (process.env.NODE_ENV === 'production' && ecomServerIps.indexOf(req.get('x-real-ip')) === -1) {
+      return res.status(403).send('Who are you? Unauthorized IP address')
+    }
   }
+
+  // pass to the endpoint handler
+  // next Express middleware
+  next()
 })
 
 ecomAuth.then(appSdk => {
@@ -65,9 +74,6 @@ ecomAuth.then(appSdk => {
   app.use(router)
   app.listen(port)
   logger.log(`--> Starting web app on port :${port}`)
-
-  // checks if store was setup to receive wirecard webhooks
-  require('./../lib/wirecard-register-notifications')(appSdk)
 })
 
 ecomAuth.catch(err => {
