@@ -23,6 +23,9 @@ ecomAuth.then(appSdk => {
       }
     })
   }
+
+  // checks if store was setup to receive wirecard webhooks
+  require('./../lib/setup-stores')(appSdk)
 })
 
 ecomAuth.catch(err => {
