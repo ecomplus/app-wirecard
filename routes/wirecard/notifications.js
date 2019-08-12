@@ -1,6 +1,6 @@
 'use strict'
 const logger = require('console-files')
-const { internalApi } = require('./../../lib/Api/Api')
+const { getWirecardAuth, getNotification, addNotification, updateNotification } = require('./../../lib/Api/Api')
 const rq = require('request')
 
 module.exports = (appSdk) => {
@@ -8,82 +8,62 @@ module.exports = (appSdk) => {
     const { storeId } = req.params
     const { payment } = req.body.resource
     logger.log(JSON.stringify(req.body))
-    internalApi
-      .then(api => {
-        return api.getWirecardAuth(storeId)
-          .then(wirecardAuth => ({ wirecardAuth, api }))
-      })
-      .then(async ({ wirecardAuth, api }) => {
 
-        try {
-          // notification exist?
-          let notification = await api.getNotification(payment.id)
+    getWirecardAuth(storeId)
 
-          // if not insert at database
-          // and await for new notification
-          // to update status
-          if (!notification) {
-            api.addNotification(payment.id, payment.status)
-              .then(() => {
-                return res.status(204).end()
-              })
-          } else {
-            // if notification exist,  get payment at wirecard to confirm if status
-            // is different that status we have at database
-            let token = wirecardAuth.w_access_token
-            let wirecardPayment = await getPayment(payment.id, token)
+      .then(async auth => {
+        let notification = await getNotification(payment.id)
 
-            // parse json to obj
-            wirecardPayment = JSON.parse(wirecardPayment)
+        if (!notification) {
+          addNotification(payment.id, payment.status)
 
-            // if status is the same
-            if (wirecardPayment.status === notification.current_status) {
-              // glow
+            .then(() => {
               return res.status(204).end()
-            } else {
-              // if not search at ecomplus api for orders with paymentId
-              let resource = `orders.json?transactions.intermediator.transaction_code=${payment.id}&fields=_id,transactions._id,transactions.intermediator.transaction_code`
-              let method = 'GET'
-              let orders = await appSdk.apiRequest(storeId, resource, method)
-              let { result } = orders.response.data
+            })
+        } else {
+          let token = auth.w_access_token
+          let paymentInWirecard = await getPayment(payment.id, token)
+          paymentInWirecard = JSON.parse(paymentInWirecard)
 
-              // find for order with property transations
-              let order = result.find(order => order.transactions)
+          if (paymentInWirecard.status === notification.current_status) {
+            return res.status(204).end()
+          } else {
+            let resource = `orders.json?transactions.intermediator.transaction_code=${payment.id}&fields=_id,transactions._id,transactions.intermediator.transaction_code`
+            let method = 'GET'
+            let orders = await appSdk.apiRequest(storeId, resource, method)
+            let { result } = orders.response.data
+            // find for order with property transations
+            let order = result.find(order => order.transactions)
 
-              // find for transactions with the same paymentId of notifications
-              let transaction = order.transactions.find(transaction => transaction.intermediator.transaction_code === payment.id)
+            // find for transactions with the same paymentId of notifications
+            let transaction = order.transactions.find(transaction => transaction.intermediator.transaction_code === payment.id)
 
-              // post new payments_history at order
-              resource = `orders/${order._id}/payments_history.json`
-              method = 'POST'
-              let body = {
-                transaction_id: transaction._id,
-                date_time: new Date().toISOString(),
-                status: paymentStatus(payment.status)
-              }
-
-              return appSdk.apiRequest(storeId, resource, method, body)
-
-                // finaly update database status
-                .then(() => {
-                  return api.updateNotification(payment.id, payment.status)
-                })
-
-                // then end
-                .then(() => {
-                  return res.status(204).end()
-                })
+            // post new payments_history at order
+            resource = `orders/${order._id}/payments_history.json`
+            method = 'POST'
+            let body = {
+              transaction_id: transaction._id,
+              date_time: new Date().toISOString(),
+              status: paymentStatus(payment.status)
             }
+
+            return appSdk.apiRequest(storeId, resource, method, body)
+
+              // finaly update database status
+              .then(() => {
+                return updateNotification(payment.id, payment.status)
+              })
           }
-        } catch (error) {
-          console.log(error)
-          logger.error('[WIRECARD WEBHOOKS]', error)
-          return res.status(400).end()
         }
       })
-      .catch(e => {
-        logger.error(e)
-        return res.status(400).end()
+
+      .then(() => {
+        return res.status(204).end()
+      })
+
+      .catch(error => {
+        logger.error('WIRECARD_NOTIFICATION_ERR', error)
+        return res.status(204).end()
       })
   }
 }

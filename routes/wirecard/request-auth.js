@@ -1,6 +1,5 @@
 'use strict'
 const qs = require('querystring')
-require('dotenv').config() // debug
 module.exports = () => {
   return (req, res) => {
     const { x_store_id } = req.query
