@@ -88,12 +88,12 @@
           },
           {
             "number": 3,
-            "tax": true,
+            "tax": false,
             "tax_value": 5.50
           },
           {
             "number": 2,
-            "tax": true,
+            "tax": false,
             "tax_value": 4.50
           },
           {
@@ -107,7 +107,8 @@
           "name": "Wirecard"
         },
         "icon": "https://ecom.nyc3.digitaloceanspaces.com/plus/assets/img/stamps/wirecard.png",
-        "url": "https://www.wiredcard.com.br/payment"
+        "url": "https://www.wiredcard.com.br/payment",
+        "enabled": true
       },
       {
         "name": "Boleto Bancário",
@@ -128,7 +129,8 @@
           "second": "fique atento à data de vencimento do boleto.",
           "third": "Pague em qualquer casa lotérica."
         },
-        "url": "https://www.wiredcard.com.br/payment"
+        "url": "https://www.wiredcard.com.br/payment",
+        "enabled": true
       },
       {
         "name": "Débito Online",
@@ -143,7 +145,8 @@
           "link": "https://www.wirecard.com.br",
           "name": "Wirecard"
         },
-        "url": "https://www.wiredcard.com.br/payment"
+        "url": "https://www.wiredcard.com.br/payment",
+        "enabled": true
       }
     ],
     "sort": [
