@@ -46,24 +46,26 @@ module.exports = () => {
         }
       })
 
-      // create payment option list for list_payment
-      // with merged configuration
-      configMerged.forEach(config => {
-        let paymentGateways = {}
-        paymentGateways.discount = listPaymentOptions.discount(config)
-        paymentGateways.icon = listPaymentOptions.icon(config)
-        paymentGateways.installments = listPaymentOptions.intermediator(config)
-        paymentGateways.installment_options = listPaymentOptions.installment_options(config, params)
-        paymentGateways.label = listPaymentOptions.label(config)
-        paymentGateways.payment_method = listPaymentOptions.payment_method(config)
-        paymentGateways.payment_url = listPaymentOptions.payment_url(config)
-        paymentGateways.type = listPaymentOptions.type(config)
-        if ((config.type === 'credit_card')) {
-          paymentGateways.js_client = listPaymentOptions.js_client(config, hiddenData)
-        }
+      if (params && params.hasOwnProperty('items') && params.hasOwnProperty('amount')) {
+        // create payment option list for list_payment
+        // with merged configuration
+        configMerged.forEach(config => {
+          let paymentGateways = {}
+          paymentGateways.discount = listPaymentOptions.discount(config)
+          paymentGateways.icon = listPaymentOptions.icon(config)
+          paymentGateways.installments = listPaymentOptions.intermediator(config)
+          paymentGateways.installment_options = listPaymentOptions.installment_options(config, params)
+          paymentGateways.label = listPaymentOptions.label(config)
+          paymentGateways.payment_method = listPaymentOptions.payment_method(config)
+          paymentGateways.payment_url = listPaymentOptions.payment_url(config)
+          paymentGateways.type = listPaymentOptions.type(config)
+          if ((config.type === 'credit_card')) {
+            paymentGateways.js_client = listPaymentOptions.js_client(config, hiddenData)
+          }
 
-        response.payment_gateways.push(paymentGateways)
-      })
+          response.payment_gateways.push(paymentGateways)
+        })
+      }
 
       // interest_free_installments
       configMerged.forEach(config => {
