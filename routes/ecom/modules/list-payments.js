@@ -53,33 +53,20 @@ module.exports = () => {
           let paymentGateways = {}
           paymentGateways.discount = listPaymentOptions.discount(config)
           paymentGateways.icon = listPaymentOptions.icon(config)
-          paymentGateways.installments = listPaymentOptions.intermediator(config)
-          paymentGateways.installment_options = listPaymentOptions.installment_options(config, params)
+          paymentGateways.intermediator = listPaymentOptions.intermediator(config)
           paymentGateways.label = listPaymentOptions.label(config)
           paymentGateways.payment_method = listPaymentOptions.payment_method(config)
           paymentGateways.payment_url = listPaymentOptions.payment_url(config)
           paymentGateways.type = listPaymentOptions.type(config)
           if ((config.type === 'credit_card')) {
             paymentGateways.js_client = listPaymentOptions.js_client(config, hiddenData)
+            paymentGateways.installment_options = listPaymentOptions.installment_options(config, params)
+            paymentGateways.card_companies = config.card_companies
           }
 
           response.payment_gateways.push(paymentGateways)
         })
       }
-
-      // interest_free_installments
-      configMerged.forEach(config => {
-        if (config.hasOwnProperty('installments')) {
-          // sort array
-          config.installments.sort((a, b) => (a.number > b.number) ? 1 : ((b.number > a.number) ? -1 : 0))
-
-          config.installments.filter(installment => {
-            if (installment.tax === false && installment.number > 1) {
-              response.interest_free_installments = installment.number
-            }
-          })
-        }
-      })
 
       // discount_options
       configMerged.forEach(config => {
@@ -93,6 +80,27 @@ module.exports = () => {
           }
         }
       })
+
+      // discount_option
+      if (application.hasOwnProperty('hidden_data') && application.hidden_data.hasOwnProperty('discount_option')) {
+        const discountOption = application.hidden_data.discount_option || {}
+        response.discount_option = {
+          min_amount: discountOption.min_amount,
+          label: discountOption.label,
+          type: discountOption.type,
+          value: discountOption.value
+        }
+      }
+
+      // installments_option
+      if (application.hasOwnProperty('hidden_data') && application.hidden_data.hasOwnProperty('installments_option')) {
+        const installmentOptions = application.hidden_data.installments_option || {}
+        response.installments_option = {
+          min_installment: installmentOptions.min_installment,
+          max_number: installmentOptions.max_number,
+          monthly_interest: installmentOptions.monthly_interest
+        }
+      }
 
       // sort config
       if (application.hasOwnProperty('hidden_data') && hiddenData.hasOwnProperty('sort')) {

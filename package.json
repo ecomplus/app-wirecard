@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "ECOM_AUTH_DB=/var/dbs/wirecard.sqlite LOGGER_OUTPUT=/var/log/nodejs/wirecard.out LOGGER_ERRORS=/var/log/nodejs/wirecard.error nodemon main.js"
   },
   "author": "Talisson Ferreira <talissonf@gmail.com>",
   "license": "ISC",
