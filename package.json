@@ -1,5 +1,5 @@
 {
-  "name": "wirecard-external",
+  "name": "wirecard",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,25 +9,13 @@
   "author": "Talisson Ferreira <talissonf@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.19.1",
     "body-parser": "^1.18.3",
     "console-files": "^2.2.0",
-    "dotenv": "^6.1.0",
     "ecomplus-app-sdk": "^1.9.4",
     "express": "^4.16.4",
     "moip-sdk-node": "^1.2.1",
     "moment": "^2.22.2",
-    "nodemon": "^1.18.6",
-    "querystring": "^0.2.0",
-    "request": "^2.88.0",
     "sqlite3": "^4.0.3"
-  },
-  "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-loader": "^8.0.4",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-stage-0": "^6.24.1",
-    "babel-register": "^6.26.0"
   }
 }

@@ -4,7 +4,7 @@
   "title": "Wirecard",
   "slug": "wirecard",
   "paid": false,
-  "version": "1.0.1",
+  "version": "1.0.0",
   "version_date": "2019-06-19T00:00:00.000Z",
   "type": "external",
   "modules": {
@@ -21,6 +21,9 @@
   "authentication": true,
   "auth_callback_uri": "https://wirecard.ecomplus.biz/ecom/auth-callback",
   "auth_scope": {
+    "stores/me": [
+      "GET"
+    ],
     "orders": [
       "GET",
       "POST"
@@ -33,128 +36,5 @@
     "procedures": [
       "POST"
     ]
-  },
-  "hidden_data": {
-    "payment_options": [
-      {
-        "name": "Cartão Credito",
-        "type": "credit_card",
-        "payment_type": "payment",
-        "installments": [
-          {
-            "number": 12,
-            "tax": true,
-            "tax_value": 12.50
-          },
-          {
-            "number": 11,
-            "tax": true,
-            "tax_value": 12
-          },
-          {
-            "number": 10,
-            "tax": true,
-            "tax_value": 11.50
-          },
-          {
-            "number": 9,
-            "tax": true,
-            "tax_value": 10.50
-          },
-          {
-            "number": 8,
-            "tax": true,
-            "tax_value": 9.50
-          },
-          {
-            "number": 7,
-            "tax": true,
-            "tax_value": 8.50
-          },
-          {
-            "number": 6,
-            "tax": true,
-            "tax_value": 7.50
-          },
-          {
-            "number": 5,
-            "tax": true,
-            "tax_value": 6.50
-          },
-          {
-            "number": 4,
-            "tax": true,
-            "tax_value": 5.50
-          },
-          {
-            "number": 3,
-            "tax": false,
-            "tax_value": 5.50
-          },
-          {
-            "number": 2,
-            "tax": false,
-            "tax_value": 4.50
-          },
-          {
-            "number": 1,
-            "tax": false
-          }
-        ],
-        "intermediator": {
-          "code": "wirecard",
-          "link": "https://www.wirecard.com.br",
-          "name": "Wirecard"
-        },
-        "icon": "https://ecom.nyc3.digitaloceanspaces.com/plus/assets/img/stamps/wirecard.png",
-        "url": "https://www.wiredcard.com.br/payment",
-        "enabled": true
-      },
-      {
-        "name": "Boleto Bancário",
-        "type": "banking_billet",
-        "payment_type": "payment",
-        "discount": {
-          "value": 0,
-          "type": "percentage"
-        },
-        "expiration_date": 14,
-        "intermediator": {
-          "code": "wirecard",
-          "link": "https://www.wirecard.com.br",
-          "name": "Wirecard"
-        },
-        "instruction_lines": {
-          "first": "Atenção",
-          "second": "fique atento à data de vencimento do boleto.",
-          "third": "Pague em qualquer casa lotérica."
-        },
-        "url": "https://www.wiredcard.com.br/payment",
-        "enabled": true
-      },
-      {
-        "name": "Débito Online",
-        "type": "online_debit",
-        "payment_type": "payment",
-        "discount": {
-          "value": 0,
-          "type": "percentage"
-        },
-        "intermediator": {
-          "code": "wirecard",
-          "link": "https://www.wirecard.com.br",
-          "name": "Wirecard"
-        },
-        "url": "https://www.wiredcard.com.br/payment",
-        "enabled": true
-      }
-    ],
-    "sort": [
-      "credit_card",
-      "online_debit",
-      "banking_billet"
-    ],
-    "sandbox": false,
-    "statement_descriptor": "E-Com Plus Lojas"
   }
 }

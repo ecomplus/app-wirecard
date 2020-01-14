@@ -13,7 +13,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
 const router = express.Router()
-const port = process.env.PORT || 3001
+const port = process.env.PORT || 4200
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -48,27 +48,23 @@ ecomAuth.then(appSdk => {
   const routes = './../routes'
   router.get('/', require(`${routes}/`)())
 
-    // base routes for E-Com Plus Store API
-    ;[
-      '/ecom/auth-callback',
-      '/ecom/webhook',
-      '/ecom/modules/create-transaction',
-      '/ecom/modules/list-payments'
-    ].forEach(route => router.post(route, require(`${routes}${route}`)(appSdk)))
+  // base routes for E-Com Plus Store API
+  ;[
+    '/ecom/auth-callback',
+    '/ecom/webhook',
+    '/ecom/modules/create-transaction',
+    '/ecom/modules/list-payments'
+  ].forEach(route => router.post(route, require(`${routes}${route}`)(appSdk)))
 
-    /* Add custom app routes here */
-    ;[
-      '/wirecard/auth-callback',
-      '/wirecard/request-auth'
-    ].forEach(route => {
-      router.get(route, require(`${routes}${route}`)(appSdk))
-    })
+  /* Add custom app routes here */
+  ;[
+    '/wirecard/auth-callback',
+    '/wirecard/request-auth'
+  ].forEach(route => {
+    router.get(route, require(`${routes}${route}`)(appSdk))
+  })
 
-  // debug
-  // router.get('/redirect', require(`${routes}/wirecard/request-auth`)(appSdk))
-  // router.get('/callback', require(`${routes}/wirecard/auth-callback`)(appSdk))
-  // wirecard notifications
-  router.post('/wirecard/notifications/:storeId', require(`${routes}/wirecard/notifications`)(appSdk))
+  router.post('/wirecard/notifications/:storeId', require(`${routes}/wirecard/webhook`)(appSdk))
 
   // add router and start web server
   app.use(router)
