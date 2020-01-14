@@ -231,7 +231,7 @@ module.exports = appSdk => {
       })
 
       .then(({ transactionId, status }) => {
-        return transactions.save(transactionId, status)
+        return transactions.save(transactionId, status, storeId)
       })
 
       .catch(err => {
