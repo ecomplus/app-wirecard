@@ -1,58 +1,43 @@
 'use strict'
-const rq = require('request')
-const qs = require('querystring')
 const logger = require('console-files')
-//
-const { addWirecardAuth } = require('./../../lib/Api/Api')
-//
-module.exports = (appSdk) => {
-  return (req, res) => {
-    const { code, storeId } = req.query
-    let appEnv = (process.env.WC_SANDBOX) ? 'https://connect-sandbox.' : 'https://connect.'
-    let wirecardUri = appEnv + 'moip.com.br/oauth/token'
+const { authentications } = require('./../../lib/database')
+const initClient = require('./../../lib/wirecard-api/init-client')
 
-    let reqOptions = {
-      url: wirecardUri,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': process.env.WC_ACCESS_TOKEN
-      },
-      form: qs.stringify({
-        client_id: process.env.WC_ID,
-        client_secret: process.env.WC_APP_SECRET,
-        redirect_uri: process.env.WC_REDIRECT_URI,
-        grant_type: 'authorization_code',
-        code: code
-      })
-    }
+module.exports = () => (req, res) => {
+  const { code, storeId } = req.query
+  const options = {
+    token: process.env.WC_TOKEN,
+    key: process.env.WC_CHAVE,
+    production: (!process.env.WC_SANDBOX)
+  }
 
-    rq.post(reqOptions, (erro, resp, body) => {
-      if (erro || resp.statusCode >= 400) {
-        throw resp.body
-      }
+  const wirecard = initClient({ options })
+  wirecard.connect.generateToken({
+    clientId: process.env.WC_ID,
+    redirectUri: process.env.WC_REDIRECT_URI,
+    clientSecret: process.env.WC_APP_SECRET,
+    grantType: 'authorization_code',
+    code
+  })
 
-      let wirecardBody = JSON.parse(body)
-      let accessToken = wirecardBody.access_token
-      let refreshToken = wirecardBody.refresh_token
-      let expiresIn = wirecardBody.expires_in
-      let scope = wirecardBody.scope
-      let accountId = wirecardBody.moipAccount.id
+    .then(resp => JSON.parse(resp.body))
 
-      addWirecardAuth(storeId, accessToken, refreshToken, expiresIn, scope, accountId)
+    .then(resp => {
+      return authentications
+        .save(storeId, resp.access_token, resp.refresh_token, resp.expires_in, resp.scope, resp.moipAccount.id)
         .then(() => {
           res.status(200)
           res.write('<script>window.close()</script>')
           return res.end()
         })
-
-        .catch(error => {
-          logger.error('WIRECARD_AUTH_ERR', error)
-          res.status(400)
-          return res.send({
-            error: 'WIRECARD_AUTH_ERR',
-            message: 'Unexpected Error Try Later'
-          })
-        })
     })
-  }
+
+    .catch(error => {
+      logger.error('WIRECARD_AUTH_ERR', error)
+      res.status(400)
+      return res.send({
+        error: 'WIRECARD_AUTH_ERR',
+        message: 'Unexpected Error Try Later'
+      })
+    })
 }
