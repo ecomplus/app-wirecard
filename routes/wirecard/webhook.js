@@ -6,7 +6,7 @@ const parsePaymentStatus = require('./../../lib/parse-payment-status')
 
 module.exports = appSdk => {
   return (req, res) => {
-    const { storeId } = req.params
+    let storeId
     const { payment } = req.body.resource
 
     logger.log(`[!] Wirecard webhook ${payment.id} | #${storeId}`)
@@ -15,6 +15,7 @@ module.exports = appSdk => {
 
       .then(transaction => {
         // get wirecard app auth
+        storeId = transaction.store_id
         return authentications.get(storeId).then(auth => ({ transaction, auth }))
       })
 
