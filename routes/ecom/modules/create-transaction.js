@@ -23,7 +23,7 @@ module.exports = appSdk => {
     const { params, application } = body
     // app configured options
     const config = Object.assign({}, application.hidden_data, configDefault)
-
+    console.log(config.sandbox && (config.sandbox === true) ? true : false)
     // wirecard client options
     let options
 
@@ -37,8 +37,13 @@ module.exports = appSdk => {
           } else {
             options = {
               accessToken: auth.w_access_token,
-              production: Boolean(config.sandbox && config.sandbox === true)
+              production: true
             }
+
+            if (config.sandbox && config.sandbox === true) {
+              options.production = false
+            }
+
             resolve({ options })
           }
         })
