@@ -64,7 +64,7 @@ ecomAuth.then(appSdk => {
     router.get(route, require(`${routes}${route}`)(appSdk))
   })
 
-  router.post('/wirecard/notifications/:storeId', require(`${routes}/wirecard/webhook`)(appSdk))
+  router.post('/wirecard/webhook', require(`${routes}/wirecard/webhook`)(appSdk))
 
   // add router and start web server
   app.use(router)
