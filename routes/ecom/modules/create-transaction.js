@@ -37,7 +37,7 @@ module.exports = appSdk => {
           } else {
             options = {
               accessToken: auth.w_access_token,
-              production: (config.sandbox && config.sandbox === true)
+              production: Boolean(config.sandbox && config.sandbox === true)
             }
             resolve({ options })
           }
