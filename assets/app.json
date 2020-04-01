@@ -27,125 +27,11 @@
     "procedures": ["POST"]
   },
   "admin_settings": {
-    "payment_options": {
-      "schema": {
-        "type": "array",
-        "title": "Formas de Pagamento Wirecard",
-        "items": {
-          "type": "object",
-          "title": "Configurações",
-          "required": [
-            "name",
-            "type",
-            "payment_type",
-            "installments",
-            "intermediator",
-            "icon",
-            "url",
-            "enabled"
-          ],
-          "properties": {
-            "name": {
-              "type": "string",
-              "title": "Rótulo do pagamento",
-              "maxLength": 200,
-              "description": "Escreva o nome da forma de pagamento que aparecerá no checkout para seus clientes. Por exemplo: Cartão de Crédito"
-            },
-            "type": {
-              "type": "string",
-              "title": "Tipo de pagmento",
-              "description": "Informe o tipo de pagamento, ou seja, se é do tipo cartão de crédito, digite credit_card. Se for boleto, escreva banking_billet. Se for debito online, escreva online_debit"
-            },
-            "payment_type": {
-              "type": "string",
-              "title": "Modelo de pagamento",
-              "default": "payment",
-              "description": "Digite o modelo de pagamento, ou seja, se é recurrence (assinatura) ou payment (pagamentos)"
-            },
-            "installments": {
-              "type": "array",
-              "title": "Parcelamento",
-              "items": {
-                "type": "object",
-                "title": "The Items Schema",
-                "required": ["number", "tax", "tax_value"],
-                "properties": {
-                  "number": {
-                    "type": "integer",
-                    "title": "Quantidade de parcelas",
-                    "default": 0,
-                    "description": "Digite a quantidade de parcelas da forma de pagamento"
-                  },
-                  "tax": {
-                    "type": "boolean",
-                    "title": "Deseja utilizar taxa ?",
-                    "default": false,
-                    "description": "Marque como sim para utilizar taxas, ou não"
-                  },
-                  "tax_value": {
-                    "type": "integer",
-                    "title": "Valor da taxa",
-                    "default": 0,
-                    "description": "Insira o valor da taxa do parcelamento"
-                  }
-                }
-              }
-            },
-            "intermediator": {
-              "type": "object",
-              "title": "Intermediador",
-              "required": ["code", "link", "name"],
-              "properties": {
-                "code": {
-                  "type": "string",
-                  "title": "Slug do intermediador"
-                },
-                "link": {
-                  "type": "string",
-                  "title": "Link do Intermediador",
-                  "format": "uri",
-                  "description": "Digite o link da página inicial do intermediador de pagamento. Exemplo: https://www.wirecard.com.br"
-                },
-                "name": {
-                  "type:": "string",
-                  "title": "Nome do intermediador",
-                  "description": "Escreva o nome do intermediador que esteja utilizando. Exemplo: wirecard"
-                }
-              }
-            },
-            "icon": {
-              "type": "string",
-              "title": "Ícone do intermediador",
-              "format": "uri",
-              "description": "Insira a URL do ícone ou a imagem que irá representar a forma de pagamento no checkout. Sugere-se inserir o logotipo do intermediador de pagamento"
-            },
-            "url": {
-              "type": "string",
-              "title": "URL da Forma de Pagamento",
-              "description": "URL da forma de pagamento. Exemplo: https://www.wiredcard.com.br/payment",
-              "format": "uri"
-            },
-            "enabled": {
-              "type": "boolean",
-              "title": "Habilitar metodo de pagamento",
-              "description": "Por padrão todos os metódos de pagamento estão habilitados, para desativar algum serviço marque essa opção como desativado",
-              "default": true
-            }
-          }
-        }
-      },
-      "hide": true
-    },
-    "sort": {
+    "statement_descriptor": {
       "schema": {
         "type": "string",
-          "title": "Ordem de Pagamento",
-          "description": "Defina a ordem das modalidades de pagamento que irão aparecer no checkout. Exemplo: online_debit, credit_card, banking_billet",
-          "enum": [
-            "online_debit",
-            "credit_card",
-            "banking_billet"
-          ]
+        "title": "Nome da Loja",
+        "description": "Escreva o nome da sua loja. Exemplo: Minha Loja"
       },
       "hide": false
     },
@@ -156,15 +42,149 @@
         "default": false,
         "description": "Está em fase de teste? Utilize Sandbox, se já estiver em Live/Produção, ou seja, pronto para vender, marque como falso ou não"
       },
-      "hide": true
+      "hide": false
     },
-    "statement_descriptor": {
+    "sort": {
       "schema": {
         "type": "string",
-        "title": "Nome da Loja",
-        "description": "Escreva o nome da sua loja. Exemplo: Loja Teste"
+        "title": "Ordem de Pagamento",
+        "description": "Defina a ordem das modalidades de pagamento que irão aparecer no checkout.",
+        "enum": ["Débito Online", "Cartão de Crédito", "Boleto Bancário"]
       },
-      "hide": true
+      "hide": false
+    },
+    "banking_billet": {
+      "schema": {
+        "type": "object",
+        "title": "Boleto",
+        "description": "Configurações para pagamento com boleto",
+        "properties": {
+          "expiration_date": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 99999999,
+            "default": 7,
+            "description": "Validade em dias dos boletos gerados pelo wirecard, padrão 7 dias.",
+            "title": "Vencimento em dias"
+          },
+          "enabled": {
+            "type": "boolean",
+            "title": "Habilitado",
+            "description": "Habilitar meio de pagamento",
+            "default": false
+          }
+        }
+      },
+      "hide": false
+    },
+    "credit_card": {
+      "schema": {
+        "type": "object",
+        "title": "Cartão de Crédito",
+        "description": "Configurações para pagamento com cartão de crédito",
+        "properties": {
+          "installments_option": {
+            "type": "object",
+            "required": ["max_number"],
+            "properties": {
+              "min_installment": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 99999999,
+                "default": 5,
+                "description": "Valor mínimo da parcela",
+                "title": "Valor mínimo"
+              },
+              "max_number_w_tax": {
+                "type": "integer",
+                "minimum": 2,
+                "maximum": 999,
+                "title": "Parcelas sem juros",
+                "description": "Número máximo de parcelas sem júros"
+              },
+              "max_number": {
+                "type": "integer",
+                "minimum": 2,
+                "maximum": 999,
+                "title": "Parcelas",
+                "description": "Número máximo de parcelas"
+              },
+              "tax_value": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 99999999,
+                "description": "Valor da taxa de parcelamento",
+                "title": "Valor da taxa"
+              }
+            },
+            "title": "Parcelamento",
+            "description": "Opções de parcelamento"
+          },
+          "enabled": {
+            "type": "boolean",
+            "title": "Habilitado",
+            "description": "Habilitar meio de pagamento",
+            "default": false
+          }
+        }
+      },
+      "hide": false
+    },
+    "online_debit": {
+      "schema": {
+        "type": "object",
+        "title": "Débito online",
+        "description": "Configurações para pagamento com débito online",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "title": "Habilitado",
+            "description": "Habilitar meio de pagamento",
+            "default": false
+          }
+        }
+      },
+      "hide": false
+    },
+    "discount": {
+      "schema": {
+        "type": "object",
+        "required": ["value"],
+        "additionalProperties": false,
+        "properties": {
+          "apply_at": {
+            "type": "string",
+            "enum": ["total", "subtotal", "freight"],
+            "default": "subtotal",
+            "title": "Aplicar desconto em",
+            "description": "Em qual valor o desconto deverá ser aplicado no checkout"
+          },
+          "min_amount": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 999999999,
+            "description": "Montante mínimo para aplicar o desconto",
+            "title": "Valor mínimo"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["percentage", "fixed"],
+            "default": "percentage",
+            "title": "Tipo de desconto",
+            "description": "Desconto com valor percentual ou fixo"
+          },
+          "value": {
+            "type": "number",
+            "minimum": -99999999,
+            "maximum": 99999999,
+            "title": "Valor do desconto",
+            "description": "Valor percentual ou fixo a ser descontado, dependendo to tipo configurado"
+          }
+        },
+        "title": "Desconto",
+        "description": "Desconto a ser aplicado para pagamentos realizados com boletos"
+      },
+      "hide": false
     }
   }
 }
