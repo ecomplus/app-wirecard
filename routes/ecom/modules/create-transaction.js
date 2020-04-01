@@ -8,8 +8,6 @@ const { authentications, transactions } = require('./../../../lib/database')
 const parsePaymentBody = require('./../../../lib/parse-payment-body')
 // convert payment status to store-api valid status
 const parsePaymentStatus = require('./../../../lib/parse-payment-status')
-// application default config
-const configDefault = require('./../../../lib/payment-default')
 // create new order in wirecard api
 const createOrder = require('./../../../lib/wirecard-api/create-order')
 // execute payment for wirecard orders
@@ -22,8 +20,8 @@ module.exports = appSdk => {
     // treat module request body
     const { params, application } = body
     // app configured options
-    const config = Object.assign({}, application.hidden_data, configDefault)
-    console.log(config.sandbox && (config.sandbox === true) ? true : false)
+    const config = Object.assign({}, application.hidden_data, application.data)
+
     // wirecard client options
     let options
 
@@ -57,6 +55,7 @@ module.exports = appSdk => {
       .then(async ({ wirecardOrder, options }) => {
         logger.log(`[!] New Wirecard order ${wirecardOrder.id} for store #${storeId} /${params.order_id}`)
         const store = await appSdk.apiRequest(storeId, '/stores/me.json').then(resp => resp.response.data)
+        const statementDescriptor = config.statement_descriptor ? config.statement_descriptor.substr(0, 12) : store.name.substr(0, 12)
 
         // try to pay the order created
         let paymentBody
@@ -73,17 +72,17 @@ module.exports = appSdk => {
             }
             break
           case 'banking_billet':
-            const bankingBillet = config.payment_options.find(option => option.type === 'banking_billet')
+            const expirationDate = moment(new Date()).add(config.banking_billet ? config.banking_billet.expiration_date : 7, 'days').toISOString().slice(0, 10)
             paymentBody = {
-              statementDescriptor: config.statement_descriptor ? config.statement_descriptor.substr(0, 12) : store.name.substr(0, 12),
+              statementDescriptor,
               fundingInstrument: {
                 method: 'BOLETO',
                 boleto: {
-                  expirationDate: moment(new Date()).add(bankingBillet.expiration_date, 'days').toISOString().slice(0, 10),
+                  expirationDate,
                   instructionLines: {
-                    first: bankingBillet.instruction_lines ? bankingBillet.instruction_lines.first : 'Atenção',
-                    second: bankingBillet.instruction_lines ? bankingBillet.instruction_lines.second : 'fique atento à data de vencimento do boleto.',
-                    third: bankingBillet.instruction_lines ? bankingBillet.instruction_lines.third : 'Pague em qualquer casa lotérica.'
+                    first: 'Atenção',
+                    second: 'fique atento à data de vencimento do boleto.',
+                    third: 'Pague em qualquer casa lotérica.'
                   },
                   logoUri: store.logo ? store.logo.url : 'https://developers.e-com.plus/src/assets/img/logo-dark.png'
                 }
@@ -94,7 +93,7 @@ module.exports = appSdk => {
             const { payer, buyer, to } = params
             paymentBody = {
               installmentCount: params.installments_number,
-              statementDescriptor: config.statement_descriptor ? config.statement_descriptor.substr(0, 12) : store.name.substr(0, 12),
+              statementDescriptor,
               fundingInstrument: {
                 method: 'CREDIT_CARD',
                 creditCard: {
