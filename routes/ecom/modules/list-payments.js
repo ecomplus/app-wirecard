@@ -1,120 +1,168 @@
 'use strict'
 const logger = require('console-files')
 const { authentications } = require('./../../../lib/database')
+const newPaymentGateway = require('./../../../lib/new-payment-gateway')
+const tabelaPrice = require('./../../../lib/table-price')
+const installmentsDefault = require('./../../../lib/installments-default')
+// get account public_key
+const myPublicKey = require('./../../../lib/wirecard-api/get-public-key')
 
 module.exports = () => {
   return (req, res) => {
     const { params, application } = req.body
     const storeId = req.get('x-store-id')
+    const config = Object.assign({}, application.hidden_data, application.data)
 
-    authentications.get(storeId)
+    authentications
+      .get(storeId)
 
-      .then(() => {
-        // parse params from body
-        const hiddenData = application.hidden_data || {}
+      .then(async auth => {
+        const amount = params.amount || {}
 
-        // load application default config
-        let { payment_options, sort } = require('./../../../lib/payment-default')
-
-        // array to merge config
-        let configMerged = []
-
-        // empty payload
-        let response = {
+        // start mounting response body
+        // https://apx-mods.e-com.plus/api/v1/list_payments/response_schema.json?store_id=100
+        const response = {
           payment_gateways: []
         }
-        // merge application default config with
-        // configuration sent at application.hidden_data
-        payment_options.forEach(defaultOption => {
-          // if the application not has payments config setted up, uses default.
-          if (!application.hasOwnProperty('hidden_data') || !hiddenData.hasOwnProperty('payment_options')) {
-            configMerged.push(defaultOption)
+
+        // calculate discount value
+        const { discount } = config
+        if (discount && discount.value > 0) {
+          if (discount.apply_at !== 'freight') {
+            // default discount option
+            const { value } = discount
+            response.discount_option = {
+              label: config.discount_option_label,
+              value
+            }
+            // specify the discount type and min amount is optional
+            ;['type', 'min_amount'].forEach(prop => {
+              if (discount[prop]) {
+                response.discount_option[prop] = discount[prop]
+              }
+            })
+          }
+        }
+
+        // check if payment options are enabled before adding payment list
+        // baking_billet
+        if (config.banking_billet && config.banking_billet.enabled && config.banking_billet.enabled === true) {
+          const bankingBillet = {
+            ...newPaymentGateway(),
+            payment_method: {
+              code: 'banking_billet',
+              name: 'Boleto Bancário'
+            },
+            label: 'Boleto Bancário',
+            expiration_date: config.banking_billet.expiration_date || 14,
+            instruction_lines: {
+              first: 'Atenção',
+              second: 'fique atento à data de vencimento do boleto.',
+              third: 'Pague em qualquer casa lotérica.'
+            }
+          }
+
+          response.payment_gateways.push(bankingBillet)
+        }
+
+        // baking_billet
+        if (config.online_debit && config.online_debit.enabled && config.online_debit.enabled === true) {
+          const onlineDebit = {
+            ...newPaymentGateway(),
+            payment_method: {
+              code: 'online_debit',
+              name: 'Débito Online'
+            },
+            label: 'Débito Online'
+          }
+
+          response.payment_gateways.push(onlineDebit)
+        } else {
+          // remove discount options from payload
+          delete response.discount_option
+        }
+
+        // baking_billet
+        if (config.credit_card && config.credit_card.enabled && config.credit_card.enabled === true) {
+          const pubk = config.public_key || await myPublicKey(auth).then(resp => resp.keys.encryption)
+          console.log(pubk)
+          const onloadFunction = 'window.wirecardHash=function(n){return MoipSdkJs.MoipCreditCard.setPubKey(' + JSON.stringify(pubk) + ').setCreditCard({number:n.number,cvc:n.cvc,expirationMonth:n.month,expirationYear:n.year}).hash()},window.wirecardBrand=function(n){return MoipValidator.cardType(n.number)};'
+          const creditCard = {
+            ...newPaymentGateway(),
+            payment_method: {
+              code: 'credit_card',
+              name: 'Cartão Credito'
+            },
+            label: 'Cartão Credito',
+            installment_options: [],
+            js_client: {
+              cc_brand: {
+                function: 'wirecardBrand',
+                is_promise: false
+              },
+              cc_hash: {
+                function: 'wirecardHash',
+                is_promise: true
+              },
+              fallback_script_uri: 'https://ecom.nyc3.digitaloceanspaces.com/plus/assets/js/apps/moip-sdk-js.js',
+              onload_expression: onloadFunction,
+              script_uri: 'https://cdn.jsdelivr.net/gh/wirecardBrasil/moip-sdk-js@2/dist/moip-sdk-js.js'
+            }
+          }
+
+          // installment_options
+          if (config.credit_card.installments_option) {
+            // tabela price
+            const installments = config.credit_card.installments_option
+            if (amount.total >= installments.min_installment) {
+              if (installments.max_number) {
+                for (let i = 2; i < installments.max_number + 1; i++) {
+                  let taxValue = installments.tax_value
+                  // max installments without tax
+                  if (installments.max_number_w_tax && installments.max_number_w_tax >= i) {
+                    taxValue = 0
+                  }
+                  const value = tabelaPrice(amount.total, i, taxValue)
+                  creditCard.installment_options.push({
+                    number: i,
+                    tax: (taxValue > 0),
+                    value: Math.abs(value)
+                  })
+                }
+              }
+            }
+
+            // installments_option
+            response.installments_option = {
+              min_installment: installments.min_installment,
+              max_number: installments.max_number,
+              monthly_interest: installments.monthly_interest
+            }
           } else {
-            // Checks if default payment option is set in application.hidden_data
-            const applicationConfiguration = hiddenData.payment_options.find(applicationOption => applicationOption.type === defaultOption.type)
+            // wirecard default installments
+            const options = installmentsDefault
+              .filter(installment => installment.number > 1)
+              .map(installment => {
+                let installmentValue = params.amount.total / installment.number
+                let taxValue = installment.tax_value / 100
+                let installmentFinalValue = installment.tax ? (installmentValue * taxValue + installmentValue) : installmentValue
 
-            if (applicationConfiguration) {
-              // check if payment options is enabled to list at list_payments
-              if (applicationConfiguration.enabled === true) {
-                configMerged.push({
-                  ...defaultOption,
-                  ...applicationConfiguration
-                })
-              }
-            } else {
-              // uses payment_option default if option is not setted up at hiddenData.payment_options
-              configMerged.push(defaultOption)
-            }
+                return {
+                  number: installment.number,
+                  tax: installment.tax,
+                  value: Math.abs(installmentFinalValue)
+                }
+              })
+            creditCard.installment_options = options
           }
-        })
 
-        if (params && params.hasOwnProperty('items') && params.hasOwnProperty('amount')) {
-          // create payment option list for list_payment
-          // with merged configuration
-          configMerged.forEach(config => {
-            let paymentGateways = {}
-            paymentGateways.discount = listPaymentOptions.discount(config)
-            paymentGateways.icon = listPaymentOptions.icon(config)
-            paymentGateways.intermediator = listPaymentOptions.intermediator(config)
-            paymentGateways.label = listPaymentOptions.label(config)
-            paymentGateways.payment_method = listPaymentOptions.payment_method(config)
-            paymentGateways.payment_url = listPaymentOptions.payment_url(config)
-            paymentGateways.type = listPaymentOptions.type(config)
-            if ((config.type === 'credit_card')) {
-              paymentGateways.js_client = listPaymentOptions.js_client(config, hiddenData)
-              paymentGateways.installment_options = listPaymentOptions.installment_options(config, params)
-              paymentGateways.card_companies = config.card_companies
-            }
-
-            response.payment_gateways.push(paymentGateways)
-          })
+          response.payment_gateways.push(creditCard)
         }
-
-        // discount_options
-        configMerged.forEach(config => {
-          if (config.type === 'banking_billet' && config.hasOwnProperty('discount')) {
-            if (config.discount.value > 0) {
-              response.discount_options = {
-                label: config.name,
-                type: config.discount.type,
-                value: config.discount.value
-              }
-            }
-          }
-        })
-
-        // discount_option
-        if (application.hasOwnProperty('hidden_data') && application.hidden_data.hasOwnProperty('discount_option')) {
-          const discountOption = application.hidden_data.discount_option || {}
-          response.discount_option = {
-            min_amount: discountOption.min_amount,
-            label: discountOption.label,
-            type: discountOption.type,
-            value: discountOption.value
-          }
-        }
-
-        // installments_option
-        if (application.hasOwnProperty('hidden_data') && application.hidden_data.hasOwnProperty('installments_option')) {
-          const installmentOptions = application.hidden_data.installments_option || {}
-          response.installments_option = {
-            min_installment: installmentOptions.min_installment,
-            max_number: installmentOptions.max_number,
-            monthly_interest: installmentOptions.monthly_interest
-          }
-        }
-
-        // sort config
-        if (application.hasOwnProperty('hidden_data') && hiddenData.hasOwnProperty('sort')) {
-          sort = [...hiddenData.sort, ...sort]
-        }
-
-        const sortFunc = (a, b) => sort.indexOf(a.payment_method.code) - sort.indexOf(b.payment_method.code)
-        response.payment_gateways.sort(sortFunc)
 
         // response
         return res.send(response)
       })
+
       .catch(err => {
         let response = {}
         response.error = 'LIST_PAYMENTS_ERR'
@@ -135,89 +183,5 @@ module.exports = () => {
         res.status(status)
         res.send(response)
       })
-  }
-}
-
-const listPaymentOptions = {
-  discount: (config) => {
-    if (config.hasOwnProperty('discount')) {
-      return {
-        type: config.discount.type,
-        value: config.discount.value
-      }
-    }
-  },
-  icon: (config) => {
-    if (config.hasOwnProperty('icon')) {
-      return config.icon
-    }
-  },
-  installment_options: (config, params) => {
-    if (config.hasOwnProperty('installments')) {
-      let installments = config.installments
-        .filter(installment => installment.number > 1)
-        .map(installment => {
-          let installmentValue = params.amount.total / installment.number
-          let taxValue = installment.tax_value / 100
-          let installmentFinalValue = installment.tax ? (installmentValue * taxValue + installmentValue) : installmentValue
-
-          return {
-            number: installment.number,
-            tax: installment.tax,
-            value: Math.abs(installmentFinalValue)
-          }
-        })
-
-      return installments
-    }
-  },
-  intermediator: (config) => {
-    if (config.hasOwnProperty('intermediator')) {
-      return {
-        code: config.intermediator.code,
-        link: config.intermediator.link,
-        name: config.intermediator.name
-      }
-    }
-  },
-  js_client: (config, hiddenData) => {
-    if (config.type === 'credit_card') {
-      let pubk = hiddenData.public_key || ''
-      let onloadFunction = 'window.wirecardHash=function(n){return MoipSdkJs.MoipCreditCard.setPubKey(' + JSON.stringify(pubk) + ').setCreditCard({number:n.number,cvc:n.cvc,expirationMonth:n.month,expirationYear:n.year}).hash()},window.wirecardBrand=function(n){return MoipValidator.cardType(n.number)};'
-      return {
-        cc_brand: {
-          function: 'wirecardBrand',
-          is_promise: false
-        },
-        cc_hash: {
-          function: 'wirecardHash',
-          is_promise: true
-        },
-        fallback_script_uri: 'https://ecom.nyc3.digitaloceanspaces.com/plus/assets/js/apps/moip-sdk-js.js',
-        onload_expression: onloadFunction,
-        script_uri: 'https://cdn.jsdelivr.net/gh/wirecardBrasil/moip-sdk-js@2/dist/moip-sdk-js.js'
-      }
-    }
-  },
-  label: (config) => {
-    if (config.hasOwnProperty('name')) {
-      return config.name
-    }
-  },
-  payment_method: (config) => {
-    if (config.hasOwnProperty('type')) {
-      return {
-        code: config.type,
-        name: config.name
-      }
-    }
-  },
-  payment_url: (config) => {
-    if (config.hasOwnProperty('url')) {
-      return config.url
-    }
-  },
-  type: (config) => {
-    return config.payment_type || 'payment'
   }
 }
