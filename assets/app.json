@@ -4,7 +4,7 @@
   "title": "Wirecard",
   "slug": "wirecard",
   "paid": false,
-  "version": "1.0.0",
+  "version": "2.0.0",
   "version_date": "2019-06-19T00:00:00.000Z",
   "type": "external",
   "modules": {
