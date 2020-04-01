@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ECOM_AUTH_DB=/var/dbs/wirecard.sqlite LOGGER_OUTPUT=/var/log/nodejs/wirecard.out LOGGER_ERRORS=/var/log/nodejs/wirecard.error nodemon main.js"
+    "start": "ECOM_AUTH_DB=/var/dbs/wirecard.sqlite LOGGER_OUTPUT=/var/log/nodejs/wirecard.out LOGGER_ERRORS=/var/log/nodejs/wirecard.error nodemon --inspect main.js"
   },
   "author": "Talisson Ferreira <talissonf@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.19.1",
+    "big.js": "^5.2.2",
     "body-parser": "^1.18.3",
     "console-files": "^2.2.0",
     "ecomplus-app-sdk": "^1.9.4",
