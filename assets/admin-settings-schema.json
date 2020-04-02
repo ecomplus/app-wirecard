@@ -43,7 +43,7 @@
                 "title": "The Name Schema",
                 "default": "",
                 "examples": [
-                  "Cartão Credito"
+                  "Cartão de crédito"
                 ],
                 "pattern": "^(.*)$"
               },
