@@ -115,7 +115,7 @@ module.exports = appSdk => {
                       city: to.city,
                       district: to.borough,
                       street: to.street,
-                      streetNumber: to.number,
+                      streetNumber: to.number || 'SN',
                       zipCode: to.zip,
                       state: to.province_code ? to.province_code : to.province,
                       country: to.country_code || 'BRA'
@@ -241,10 +241,11 @@ module.exports = appSdk => {
       .catch(err => {
         console.log(err)
         logger.error(`[X] Error creating transaction for order ${params.order_number} | store #${storeId} | ${err}`)
-        res.status(400)
-        return res.send({
-          error: 'CREATE_TRANSACTION_ERR',
-          message: 'Unexpected Error Try Later'
+        const { response, message } = err
+        const status = 400
+        res.status(status).send({
+          error: 'UNABLE_TO_LIST_PAYMENTS',
+          message: (response && response.error_description) || message
         })
       })
   }
