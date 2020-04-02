@@ -132,10 +132,18 @@ module.exports = () => {
             }
 
             // installments_option
-            response.installments_option = {
-              min_installment: installments.min_installment,
-              max_number: installments.max_number,
-              monthly_interest: installments.monthly_interest
+            if (installments.max_number_w_tax > 0) {
+              response.installments_option = {
+                min_installment: installments.min_installment,
+                max_number: installments.max_number_w_tax,
+                monthly_interest: 0
+              }
+            } else {
+              response.installments_option = {
+                min_installment: installments.min_installment,
+                max_number: installments.max_number_w_tax,
+                monthly_interest: installments.tax_value
+              }
             }
           } else {
             // wirecard default installments
