@@ -90,9 +90,9 @@ module.exports = () => {
             ...newPaymentGateway(),
             payment_method: {
               code: 'credit_card',
-              name: 'Cartão Credito'
+              name: 'Cartão de crédito - Moip'
             },
-            label: 'Cartão Credito',
+            label: 'Cartão de crédito',
             installment_options: [],
             js_client: {
               cc_brand: {
