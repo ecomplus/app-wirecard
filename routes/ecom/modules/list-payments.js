@@ -132,7 +132,7 @@ module.exports = () => {
             }
 
             // installments_option
-            if (installments.max_number_w_tax > 0) {
+            if (installments.max_number_w_tax >= 2) {
               response.installments_option = {
                 min_installment: installments.min_installment,
                 max_number: installments.max_number_w_tax,
@@ -141,7 +141,7 @@ module.exports = () => {
             } else {
               response.installments_option = {
                 min_installment: installments.min_installment,
-                max_number: installments.max_number_w_tax,
+                max_number: installments.max_number,
                 monthly_interest: installments.tax_value
               }
             }
