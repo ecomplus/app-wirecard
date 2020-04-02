@@ -85,7 +85,6 @@ module.exports = () => {
         // baking_billet
         if (config.credit_card && config.credit_card.enabled && config.credit_card.enabled === true) {
           const pubk = config.public_key || await myPublicKey(auth).then(resp => resp.keys.encryption)
-          console.log(pubk)
           const onloadFunction = 'window.wirecardHash=function(n){return MoipSdkJs.MoipCreditCard.setPubKey(' + JSON.stringify(pubk) + ').setCreditCard({number:n.number,cvc:n.cvc,expirationMonth:n.month,expirationYear:n.year}).hash()},window.wirecardBrand=function(n){return MoipValidator.cardType(n.number)};'
           const creditCard = {
             ...newPaymentGateway(),
