@@ -73,7 +73,8 @@ module.exports = () => {
               code: 'online_debit',
               name: 'Débito Online'
             },
-            label: 'Débito Online'
+            label: 'Débito Online',
+            icon: 'https://e-com.club/mass/ftp/others/debitoWire.png'
           }
 
           response.payment_gateways.push(onlineDebit)
@@ -106,7 +107,8 @@ module.exports = () => {
               fallback_script_uri: 'https://ecom.nyc3.digitaloceanspaces.com/plus/assets/js/apps/moip-sdk-js.js',
               onload_expression: onloadFunction,
               script_uri: 'https://cdn.jsdelivr.net/gh/wirecardBrasil/moip-sdk-js@2/dist/moip-sdk-js.js'
-            }
+            },
+            icon: 'https://e-com.club/mass/ftp/others/credito-wirecard.png'
           }
 
           // installment_options
