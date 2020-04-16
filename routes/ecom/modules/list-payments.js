@@ -59,7 +59,8 @@ module.exports = () => {
               first: 'Atenção',
               second: 'fique atento à data de vencimento do boleto.',
               third: 'Pague em qualquer casa lotérica.'
-            }
+            },
+            discount
           }
 
           response.payment_gateways.push(bankingBillet)
