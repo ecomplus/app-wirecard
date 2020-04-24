@@ -185,6 +185,15 @@
         "description": "Desconto a ser aplicado para pagamentos realizados com boletos"
       },
       "hide": false
+    },
+    "discount_option_label": {
+      "schema": {
+        "type": "string",
+        "title": "Titulo de desconto",
+        "description": "Título que será exibido quando houver desconto configurado, por padrão é exibido Boleto Bancário",
+        "default": "Boleto Bancário"
+      },
+      "hide": false
     }
   }
 }
