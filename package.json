@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ECOM_AUTH_DB=/var/dbs/wirecard.sqlite LOGGER_OUTPUT=/var/log/nodejs/wirecard.out LOGGER_ERRORS=/var/log/nodejs/wirecard.error nodemon --inspect main.js"
+    "start": "ECOM_AUTH_DB=/var/dbs/wirecard.sqlite LOGGER_OUTPUT=/var/log/nodejs/wirecard.out LOGGER_ERRORS=/var/log/nodejs/wirecard.error nodemon --inspect main.js",
+    "publish:market": "node ./scripts/market-publication.js"
   },
   "author": "Talisson Ferreira <talissonf@gmail.com>",
   "license": "ISC",
