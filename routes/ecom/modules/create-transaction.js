@@ -53,7 +53,7 @@ module.exports = appSdk => {
       })
 
       .then(async ({ wirecardOrder, options }) => {
-        logger.log(`[!] New Wirecard order ${wirecardOrder.id} for store #${storeId} /${params.order_id}`)
+        logger.log(`> New order: ${wirecardOrder.id} / ${params.order_id} / #${storeId}`)
         const store = await appSdk.apiRequest(storeId, '/stores/me.json').then(resp => resp.response.data)
         const statementDescriptor = config.statement_descriptor ? config.statement_descriptor.substr(0, 12) : store.name.substr(0, 12)
 
