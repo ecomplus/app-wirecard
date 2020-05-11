@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.1](https://github.com/ecomclub/app-wirecard/compare/v2.1.0...v2.1.1) (2020-05-11)
+
+
+### Bug Fixes
+
+* **webhook:** returning status 500 when no order is found ([477ecd7](https://github.com/ecomclub/app-wirecard/commit/477ecd7fdc59b1c3cd94e9cea2618e6e76bfe9b0))
+
 ## [2.1.0](https://github.com/ecomclub/app-wirecard/compare/v0.2.13...v2.1.0) (2020-04-24)
 
 
