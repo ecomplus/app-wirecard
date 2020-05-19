@@ -12,7 +12,7 @@ module.exports = () => {
     const { params, application } = req.body
     const storeId = req.get('x-store-id')
     const config = Object.assign({}, application.hidden_data, application.data)
-
+    logger.log(JSON.stringify(req.body))
     authentications
       .get(storeId)
 
@@ -35,12 +35,12 @@ module.exports = () => {
               label: config.discount_option_label || 'Boleto Bancário',
               value
             }
-            // specify the discount type and min amount is optional
-            ;['type', 'min_amount'].forEach(prop => {
-              if (discount[prop]) {
-                response.discount_option[prop] = discount[prop]
-              }
-            })
+              // specify the discount type and min amount is optional
+              ;['type', 'min_amount'].forEach(prop => {
+                if (discount[prop]) {
+                  response.discount_option[prop] = discount[prop]
+                }
+              })
           }
         }
 
