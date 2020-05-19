@@ -12,7 +12,7 @@ module.exports = () => {
     const { params, application } = req.body
     const storeId = req.get('x-store-id')
     const config = Object.assign({}, application.hidden_data, application.data)
-    logger.log(JSON.stringify(req.body))
+
     authentications
       .get(storeId)
 
@@ -119,11 +119,16 @@ module.exports = () => {
             if (amount.total >= installments.min_installment) {
               if (installments.max_number) {
                 for (let i = 2; i < installments.max_number + 1; i++) {
-                  let taxValue = installments.tax_value
+                  let taxValue = 0
+                  if (installments.tax_value) {
+                    taxValue = installments.tax_value
+                  }
+
                   // max installments without tax
                   if (installments.max_number_w_tax && installments.max_number_w_tax >= i) {
                     taxValue = 0
                   }
+
                   const value = tabelaPrice(amount.total, i, taxValue)
                   creditCard.installment_options.push({
                     number: i,
