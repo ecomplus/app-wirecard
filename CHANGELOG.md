@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.3](https://github.com/ecomclub/app-wirecard/compare/v2.1.2...v2.1.3) (2020-05-19)
+
+
+### Bug Fixes
+
+* **list-payments:** preventing errors with tax_value undefined ([56c77a8](https://github.com/ecomclub/app-wirecard/commit/56c77a8f516c805866161abb4fd8051889908848))
+
 ### [2.1.2](https://github.com/ecomclub/app-wirecard/compare/v2.1.1...v2.1.2) (2020-05-19)
 
 ### [2.1.1](https://github.com/ecomclub/app-wirecard/compare/v2.1.0...v2.1.1) (2020-05-11)
