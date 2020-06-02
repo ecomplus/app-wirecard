@@ -30,7 +30,7 @@ module.exports = appSdk => {
               return intermediator && intermediator.transaction_code === payment.id
             })
 
-            if (transaction) {
+            if (transaction && transaction.status.current !== 'paid') {
               const body = {
                 transaction_id: transaction._id,
                 date_time: new Date().toISOString(),
