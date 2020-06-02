@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.4](https://github.com/ecomclub/app-wirecard/compare/v2.1.3...v2.1.4) (2020-06-02)
+
+
+### Bug Fixes
+
+* **webhook:** change authorization status ([c00ff91](https://github.com/ecomclub/app-wirecard/commit/c00ff91fb01150ea6ab2991e033d2f9c608cecf4))
+
 ### [2.1.3](https://github.com/ecomclub/app-wirecard/compare/v2.1.2...v2.1.3) (2020-05-19)
 
 
