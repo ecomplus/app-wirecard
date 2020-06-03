@@ -30,20 +30,22 @@ module.exports = appSdk => {
               return intermediator && intermediator.transaction_code === payment.id
             })
 
-            if (transaction && transaction.status.current !== 'paid') {
-              const body = {
-                transaction_id: transaction._id,
-                date_time: new Date().toISOString(),
-                status: parsePaymentStatus(payment.status),
-                notification_code: payment.id,
-                flags: [
-                  'wirecard',
-                  req.body.event
-                ]
+            if (transaction) {
+              if (!transaction.status || transaction.status.current !== 'paid') {
+                const body = {
+                  transaction_id: transaction._id,
+                  date_time: new Date().toISOString(),
+                  status: parsePaymentStatus(payment.status),
+                  notification_code: payment.id,
+                  flags: [
+                    'wirecard',
+                    req.body.event
+                  ]
+                }
+  
+                resource = `orders/${orders[0]._id}/payments_history.json`
+                return appSdk.apiRequest(storeId, resource, 'POST', body)
               }
-
-              resource = `orders/${orders[0]._id}/payments_history.json`
-              return appSdk.apiRequest(storeId, resource, 'POST', body)
             }
           }
 
@@ -75,8 +77,7 @@ module.exports = appSdk => {
           case 'TransactionCodeNotFound':
           case 'OrderNotFoundForTransactionCode':
           case 'WirecardAuthNotFound':
-            // return response with client error code
-            logger.error(`> NotificationError # ${payment.id} | ${message}`)
+            // ignore
             break
           default:
             const { response } = err
