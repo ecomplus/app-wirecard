@@ -42,7 +42,7 @@ module.exports = appSdk => {
                     req.body.event
                   ]
                 }
-  
+
                 resource = `orders/${orders[0]._id}/payments_history.json`
                 return appSdk.apiRequest(storeId, resource, 'POST', body)
               }
@@ -70,6 +70,8 @@ module.exports = appSdk => {
         logger.log(`> Notification:  #${payment.id} | #${storeId} | ${req.body.event}`)
         return transactions.update(payment.id, payment.status)
       })
+
+      .then(() => res.status(204).end())
 
       .catch(err => {
         const { name, message } = err
