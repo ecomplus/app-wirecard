@@ -3,6 +3,8 @@ const logger = require('console-files')
 const { transactions, authentications } = require('./../../lib/database')
 // convert payment status to store-api valid status
 const parsePaymentStatus = require('./../../lib/parse-payment-status')
+// fetch payment body from wirecard api
+const fetchPayment = require('./../../lib/wirecard-api/fetch-payment')
 
 module.exports = appSdk => {
   return (req, res) => {
@@ -18,48 +20,58 @@ module.exports = appSdk => {
       })
 
       .then(({ transaction, auth }) => {
-        const request = async (isRetry) => {
-          let resource = `orders.json?transactions.intermediator.transaction_code=${transaction.transaction_id}` +
-            `&fields=_id,transactions._id,transactions.intermediator.transaction_code`
+        const request = (isRetry) => {
+          const wirecardConfig = {
+            accessToken: auth.w_access_token,
+            production: true
+          }
 
-          const orders = await appSdk.apiRequest(storeId, resource).then(({ response }) => response.data.result)
-          const order = orders[0]
+          return fetchPayment(payment.id, wirecardConfig)
+            .then(async ({ body }) => {
+              let resource = `orders.json?transactions.intermediator.transaction_code=${transaction.transaction_id}` +
+                `&fields=_id,transactions,financial_status`
 
-          if (order && order.transactions) {
-            const transaction = order.transactions.find(({ intermediator }) => {
-              return intermediator && intermediator.transaction_code === payment.id
-            })
+              const orders = await appSdk.apiRequest(storeId, resource).then(({ response }) => response.data.result)
+              const order = orders[0]
 
-            if (transaction) {
-              if (!transaction.status || transaction.status.current !== 'paid') {
-                const body = {
-                  transaction_id: transaction._id,
-                  date_time: new Date().toISOString(),
-                  status: parsePaymentStatus(payment.status),
-                  notification_code: payment.id,
-                  flags: [
-                    'wirecard',
-                    req.body.event
-                  ]
+              if (order && order.transactions) {
+                const transaction = order.transactions.find(({ intermediator }) => {
+                  return intermediator && intermediator.transaction_code === payment.id
+                })
+
+                if (transaction) {
+                  if (!transaction.status || transaction.status.current !== 'paid' || transaction.status.current !== parsePaymentStatus(body.status)) {
+                    const paymentsHistory = {
+                      transaction_id: transaction._id,
+                      date_time: new Date().toISOString(),
+                      status: parsePaymentStatus(body.status),
+                      notification_code: payment.id,
+                      flags: [
+                        'wirecard',
+                        'webhook'
+                      ]
+                    }
+
+                    resource = `orders/${orders[0]._id}/payments_history.json`
+                    return appSdk.apiRequest(storeId, resource, 'POST', paymentsHistory)
+                  } else {
+                    return Promise.resolve()
+                  }
                 }
-
-                resource = `orders/${orders[0]._id}/payments_history.json`
-                return appSdk.apiRequest(storeId, resource, 'POST', body)
               }
-            }
-          }
 
-          if (!isRetry) {
-            return new Promise((resolve, reject) => {
-              setTimeout(() => {
-                request(true).then(resolve).catch(reject)
-              }, 5000)
+              if (!isRetry) {
+                return new Promise((resolve, reject) => {
+                  setTimeout(() => {
+                    request(true).then(resolve).catch(reject)
+                  }, 5000)
+                })
+              }
+
+              const err = new Error(`Order not found for transaction_code=${payment.id}`)
+              err.name = 'OrderNotFoundForTransactionCode'
+              throw err
             })
-          }
-
-          const err = new Error(`Order not found for transaction_code=${payment.id}`)
-          err.name = 'OrderNotFoundForTransactionCode'
-          throw err
         }
 
         return request()
@@ -74,6 +86,7 @@ module.exports = appSdk => {
       .then(() => res.status(204).end())
 
       .catch(err => {
+        console.error(err)
         const { name, message } = err
         switch (name) {
           case 'TransactionCodeNotFound':
