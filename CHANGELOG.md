@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.7](https://github.com/ecomclub/app-wirecard/compare/v2.1.6...v2.1.7) (2020-06-04)
+
+
+### Bug Fixes
+
+* **webhook:** fetch payment before patching the order ([cc393cb](https://github.com/ecomclub/app-wirecard/commit/cc393cbf8f386272142a114b4f504e47a6e4e310))
+
 ### [2.1.6](https://github.com/ecomclub/app-wirecard/compare/v2.1.5...v2.1.6) (2020-06-03)
 
 
