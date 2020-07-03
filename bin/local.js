@@ -5,8 +5,8 @@
 // log on files
 const logger = require('console-files')
 // handle app authentication to Store API
-// https://github.com/ecomclub/ecomplus-app-sdk
-const { ecomAuth } = require('ecomplus-app-sdk')
+// https://github.com/ecomplus/application-sdk
+const { ecomAuth } = require('@ecomplus/application-sdk')
 
 logger.log('--> Start running daemon processes')
 

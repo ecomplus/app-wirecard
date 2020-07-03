@@ -10,11 +10,11 @@
   "author": "Talisson Ferreira <talissonf@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "@ecomplus/application-sdk": "^1.13.0",
     "axios": "^0.19.1",
     "big.js": "^5.2.2",
     "body-parser": "^1.18.3",
     "console-files": "^2.2.0",
-    "ecomplus-app-sdk": "^1.9.4",
     "express": "^4.16.4",
     "moip-sdk-node": "^1.2.1",
     "moment": "^2.22.2",
