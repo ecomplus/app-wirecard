@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.8](https://github.com/ecomclub/app-wirecard/compare/v2.1.7...v2.1.8) (2020-07-03)
+
+
+### Bug Fixes
+
+* **parse-payment-body:** preventing errors with products with quantity less than 0 ([5562c02](https://github.com/ecomclub/app-wirecard/commit/5562c029a733f0899d738ffb5ee311beff2689ad))
+
 ### [2.1.7](https://github.com/ecomclub/app-wirecard/compare/v2.1.6...v2.1.7) (2020-06-04)
 
 
