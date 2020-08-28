@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.9](https://github.com/ecomclub/app-wirecard/compare/v2.1.8...v2.1.9) (2020-08-28)
+
+
+### Bug Fixes
+
+* **list-payments.js:** min_installment ([e7e6f59](https://github.com/ecomclub/app-wirecard/commit/e7e6f597c6aa5cbab47c4895a83f0f6a3e171a98))
+
 ### [2.1.8](https://github.com/ecomclub/app-wirecard/compare/v2.1.7...v2.1.8) (2020-07-03)
 
 
