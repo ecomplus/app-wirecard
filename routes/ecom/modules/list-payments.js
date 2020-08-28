@@ -116,20 +116,20 @@ module.exports = () => {
           if (config.credit_card.installments_option) {
             // tabela price
             const installments = config.credit_card.installments_option
-            if (amount.total >= installments.min_installment) {
-              if (installments.max_number) {
-                for (let i = 2; i < installments.max_number + 1; i++) {
-                  let taxValue = 0
-                  if (installments.tax_value) {
-                    taxValue = installments.tax_value
-                  }
+            if (installments.max_number) {
+              for (let i = 2; i < installments.max_number + 1; i++) {
+                let taxValue = 0
+                if (installments.tax_value) {
+                  taxValue = installments.tax_value
+                }
 
-                  // max installments without tax
-                  if (installments.max_number_w_tax && installments.max_number_w_tax >= i) {
-                    taxValue = 0
-                  }
+                // max installments without tax
+                if (installments.max_number_w_tax && installments.max_number_w_tax >= i) {
+                  taxValue = 0
+                }
 
-                  const value = tabelaPrice(amount.total, i, taxValue)
+                const value = tabelaPrice(amount.total, i, taxValue)
+                if (value >= installments.min_installment) {
                   creditCard.installment_options.push({
                     number: i,
                     tax: (taxValue > 0),
