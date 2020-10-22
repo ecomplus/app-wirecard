@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.10](https://github.com/ecomclub/app-wirecard/compare/v2.1.9...v2.1.10) (2020-10-22)
+
+
+### Bug Fixes
+
+* **list-payments.js:** preventing error when amount is undefined ([17d861a](https://github.com/ecomclub/app-wirecard/commit/17d861a9ef49e2008cc38b174fab6e46af6b64b3))
+* **webhook:** avoiding reversing the order of entries in payment_history ([82b03b3](https://github.com/ecomclub/app-wirecard/commit/82b03b3bea957f144f3b82fa220e1f1d3547b3f4))
+
 ### [2.1.9](https://github.com/ecomclub/app-wirecard/compare/v2.1.8...v2.1.9) (2020-08-28)
 
 
