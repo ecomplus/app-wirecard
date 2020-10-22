@@ -10,7 +10,7 @@
   "author": "Talisson Ferreira <talissonf@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "@ecomplus/application-sdk": "^1.13.0",
+    "@ecomplus/application-sdk": "^1.14.0",
     "axios": "^0.19.1",
     "big.js": "^5.2.2",
     "body-parser": "^1.18.3",
