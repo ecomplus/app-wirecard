@@ -22,7 +22,10 @@ module.exports = () => (req, res) => {
   const config = Object.assign({}, application.hidden_data, application.data)
 
   // wirecard app config
-  const wConfig = {}
+  const wConfig = {
+    production: (process.env.WC_SANDBOX !== 'true')
+  }
+
   return authentications.get(storeId).then(auth => {
     wConfig.accessToken = auth.w_access_token
     const newOrder = parsePaymentBody(body)
