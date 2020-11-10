@@ -179,7 +179,7 @@ module.exports = () => {
         response.error = 'LIST_PAYMENTS_ERR'
         let status = 400
         switch (err.name) {
-          case 'AuthNotFound':
+          case 'WirecardAuthNotFound':
             // return response with client error code
             status = 401
             response.message = `Authentication not found for store #${storeId}, please perform authorization flow again with wirecard.`

@@ -112,7 +112,7 @@ module.exports = appSdk => {
             switch (name) {
               case 'TransactionCodeNotFound':
               case 'OrderNotFoundForTransactionCode':
-              case 'AuthNotFound':
+              case 'WirecardAuthNotFound':
                 // ignore
                 break
               default:
