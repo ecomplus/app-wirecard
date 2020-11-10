@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.13](https://github.com/ecomclub/app-wirecard/compare/v2.1.12...v2.1.13) (2020-11-10)
+
+
+### Bug Fixes
+
+* **create-transaction:** check if the application is in production ([ba001f1](https://github.com/ecomclub/app-wirecard/commit/ba001f107d8af93db621ae981a2911089b7efbbb))
+
 ### [2.1.12](https://github.com/ecomclub/app-wirecard/compare/v2.1.11...v2.1.12) (2020-11-10)
 
 ### [2.1.11](https://github.com/ecomclub/app-wirecard/compare/v2.1.10...v2.1.11) (2020-10-23)
