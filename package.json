@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ECOM_AUTH_DB=/var/dbs/wirecard.sqlite LOGGER_OUTPUT=/var/log/nodejs/wirecard.out LOGGER_ERRORS=/var/log/nodejs/wirecard.error nodemon --inspect main.js",
+    "start": "ECOM_AUTH_DB=/var/dbs/wirecard.sqlite LOGGER_OUTPUT=/var/log/nodejs/wirecard.out LOGGER_ERRORS=/var/log/nodejs/wirecard.error nodemon main.js",
     "publish:market": "node ./scripts/market-publication.js"
   },
   "author": "Talisson Ferreira <talissonf@gmail.com>",
@@ -17,7 +17,6 @@
     "console-files": "^2.2.0",
     "express": "^4.16.4",
     "moip-sdk-node": "^1.2.1",
-    "moment": "^2.22.2",
     "sqlite3": "^4.0.3"
   }
 }
