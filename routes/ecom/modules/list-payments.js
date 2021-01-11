@@ -28,7 +28,7 @@ module.exports = () => {
           // default discount option
           const { value } = discount
           response.discount_option = {
-            label: config.discount_option_label || 'Boleto Bancário',
+            label: config.discount_option_label || discount.discount_option_label || 'Boleto Bancário',
             value
           }
             // specify the discount type and min amount is optional

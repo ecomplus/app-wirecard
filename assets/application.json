@@ -30,7 +30,7 @@
     "statement_descriptor": {
       "schema": {
         "type": "string",
-        "title": "Nome da Loja",
+        "title": "Nome da loja exibido na fatura do cartão",
         "description": "Escreva o nome da sua loja. Exemplo: Minha Loja"
       },
       "hide": false
@@ -152,6 +152,12 @@
         "required": ["value"],
         "additionalProperties": false,
         "properties": {
+          "discount_option_label": {
+            "type": "string",
+              "title": "Título de desconto",
+              "description": "Título que será exibido quando houver desconto configurado, por padrão é exibido Boleto Bancário",
+              "default": "Boleto Bancário"
+          },
           "apply_at": {
             "type": "string",
             "enum": ["total", "subtotal", "freight"],
@@ -183,15 +189,6 @@
         },
         "title": "Desconto",
         "description": "Desconto a ser aplicado para pagamentos realizados com boletos"
-      },
-      "hide": false
-    },
-    "discount_option_label": {
-      "schema": {
-        "type": "string",
-        "title": "Titulo de desconto",
-        "description": "Título que será exibido quando houver desconto configurado, por padrão é exibido Boleto Bancário",
-        "default": "Boleto Bancário"
       },
       "hide": false
     }
