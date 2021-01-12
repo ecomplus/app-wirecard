@@ -88,7 +88,7 @@ module.exports = () => {
           ...newPaymentGateway(),
           payment_method: {
             code: 'credit_card',
-            name: 'Cartão de crédito - Moip'
+            name: 'Cartão de crédito'
           },
           label: 'Cartão de crédito',
           installment_options: [],
@@ -145,7 +145,7 @@ module.exports = () => {
           } else {
             response.installments_option = {
               min_installment: installments.min_installment,
-              max_number: installments.max_number,
+              max_number: installments.max_number || 12,
               monthly_interest: installments.tax_value
             }
           }
@@ -168,6 +168,10 @@ module.exports = () => {
         }
 
         response.payment_gateways.push(creditCard)
+      }
+
+      if (config.sort && response.payment_gateways.length) {
+        response.payment_gateways.sort((a, b) => (config.sort.indexOf(a.payment_method.name) > config.sort.indexOf(b.payment_method.name)) ? -1 : 1)
       }
 
       // response
@@ -196,3 +200,4 @@ module.exports = () => {
       })
   }
 }
+
