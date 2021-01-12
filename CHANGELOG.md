@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.15](https://github.com/ecomclub/app-wirecard/compare/v2.1.14...v2.1.15) (2021-01-12)
+
+
+### Bug Fixes
+
+* **application.json:** update admin_settings [#29](https://github.com/ecomclub/app-wirecard/issues/29) ([435323c](https://github.com/ecomclub/app-wirecard/commit/435323c896268cabb1dc1374e14fe009542f0fe0))
+* application description ([0070988](https://github.com/ecomclub/app-wirecard/commit/0070988d079c9a3c558b69301889c69ad1608351))
+* **list-payments.js:** sort payment methods ([82a4912](https://github.com/ecomclub/app-wirecard/commit/82a4912ac5be327e22c68fa2fc59d3bc1a28a596))
+* **pkg:** install dotenv ([60df6b9](https://github.com/ecomclub/app-wirecard/commit/60df6b9d102bdf34cdcfbe5adfc0d442999f9bca))
+
 ### [2.1.14](https://github.com/ecomclub/app-wirecard/compare/v2.1.13...v2.1.14) (2020-11-11)
 
 ### [2.1.13](https://github.com/ecomclub/app-wirecard/compare/v2.1.12...v2.1.13) (2020-11-10)
