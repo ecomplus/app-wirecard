@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.16](https://github.com/ecomplus/app-wirecard/compare/v2.1.15...v2.1.16) (2021-02-08)
+
+
+### Bug Fixes
+
+* **create-transation:** never returns 5xx status, better debug wirecard error responses ([730b6bd](https://github.com/ecomplus/app-wirecard/commit/730b6bd4667c453ae69462064c3393c5624e7559))
+
 ### [2.1.15](https://github.com/ecomclub/app-wirecard/compare/v2.1.14...v2.1.15) (2021-01-12)
 
 

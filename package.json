@@ -1,10 +1,11 @@
 {
   "name": "wirecard",
-  "version": "2.1.15",
+  "version": "2.1.16",
   "description": "",
   "main": "index.js",
   "scripts": {
     "start": "ECOM_AUTH_DB=/var/dbs/wirecard.sqlite LOGGER_OUTPUT=/var/log/nodejs/wirecard.out LOGGER_ERRORS=/var/log/nodejs/wirecard.error nodemon main.js",
+    "release": "standard-version",
     "publish:market": "node ./scripts/market-publication.js"
   },
   "author": "Talisson Ferreira <talissonf@gmail.com>",
@@ -19,5 +20,8 @@
     "express": "^4.16.4",
     "moip-sdk-node": "^1.2.1",
     "sqlite3": "^4.0.3"
+  },
+  "devDependencies": {
+    "standard-version": "^9.1.0"
   }
 }
