@@ -42,34 +42,36 @@ module.exports = () => (req, res) => {
     // saving in db
     res.send(model)
     return transactions.save(payment.id, payment.status, storeId)
-  }).then(() => (logger.log(`[Wirecard] > Payment complete / ${params.order_id} / #${storeId}`)))
-    .catch(err => {
-      if (err.name === 'AuthNotFound') {
-        return res.status(400).send({
-          error: 'AUTH_ERROR',
-          message: 'Authentication not found, please install the application again.'
-        })
-      } else {
-        if (err.response) {
-          const payload = {
-            message: err.message,
-            config: err.response.toJSON(),
-            order_id: params.order_id,
-            order_number: params.order_number,
-            store_id: storeId
-          }
-          logger.error('CREATE_TRANSACTION_ERR', JSON.stringify(payload, null, 2))
-        } else {
-          logger.error('CREATE_TRANSACTION_ERR', err)
+  }).then(() => {
+    logger.log(`[Wirecard] > Payment complete / ${params.order_id} / #${storeId}`)
+  }).catch(err => {
+    logger.log(`CREATE_TRANSACTION_ERR: ${err.message} / ${params.order_id} / #${storeId}`)
+    if (err.name === 'AuthNotFound') {
+      return res.status(409).send({
+        error: 'AUTH_ERROR',
+        message: 'Authentication not found, please install the application again.'
+      })
+    } else {
+      if (err.response) {
+        const payload = {
+          message: err.message,
+          config: err.response.toJSON(),
+          order_id: params.order_id,
+          order_number: params.order_number,
+          store_id: storeId
         }
-        // return error status code
-        res.status(err.httpStatusCode || err.statusCode || 500)
-        return res.send({
-          error: 'CREATE_TRANSACTION_ERR',
-          message: (err.response && err.response.message) || err.message
-        })
+        logger.error('CREATE_TRANSACTION_ERR', JSON.stringify(payload, null, 2))
+      } else {
+        logger.error('CREATE_TRANSACTION_ERR', err)
       }
+    }
+    // return error status code
+    res.status(409)
+    return res.send({
+      error: 'CREATE_TRANSACTION_ERR',
+      message: `${(err.httpStatusCode || err.statusCode)}: ` + (err.response && err.response.message) || err.message
     })
+  })
 }
 
 const moduleParse = (payment) => {
