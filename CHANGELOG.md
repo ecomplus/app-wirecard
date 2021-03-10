@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.17](https://github.com/ecomplus/app-wirecard/compare/v2.1.16...v2.1.17) (2021-03-10)
+
+
+### Bug Fixes
+
+* **create-transaction:** prevent errors with address chars lenght limits ([fdc51ae](https://github.com/ecomplus/app-wirecard/commit/fdc51aea04dc8903250c095528ee4647aa9ba8e6))
+
 ### [2.1.16](https://github.com/ecomplus/app-wirecard/compare/v2.1.15...v2.1.16) (2021-02-08)
 
 
