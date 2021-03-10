@@ -22,6 +22,6 @@
     "sqlite3": "^4.0.3"
   },
   "devDependencies": {
-    "standard-version": "^9.1.0"
+    "standard-version": "^9.1.1"
   }
 }
