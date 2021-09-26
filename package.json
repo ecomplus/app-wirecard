@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ECOM_AUTH_DB=/var/dbs/wirecard.sqlite LOGGER_OUTPUT=/var/log/nodejs/wirecard.out LOGGER_ERRORS=/var/log/nodejs/wirecard.error nodemon main.js",
+    "start": "APP_NAME=wirecard-dev APP_BASE_URI=https://ecomplus.ngrok.io ECOM_AUTH_DB=/var/dbs/wirecard.sqlite LOGGER_OUTPUT=/var/log/nodejs/wirecard.out LOGGER_ERRORS=/var/log/nodejs/wirecard.error nodemon main.js",
     "release": "standard-version",
     "publish:market": "node ./scripts/market-publication.js"
   },
