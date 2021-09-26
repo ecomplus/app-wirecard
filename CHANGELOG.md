@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/ecomclub/app-wirecard/compare/v2.1.15...v2.2.0) (2021-09-26)
+
+
+### Features
+
+* **31:** periodically checking orders status with wirecard ([164147d](https://github.com/ecomclub/app-wirecard/commit/164147d6f218fa5960d6a91f742dab95dfcd33a5))
+
+
+### Bug Fixes
+
+* **create-transaction:** prevent errors with address chars lenght limits ([fdc51ae](https://github.com/ecomclub/app-wirecard/commit/fdc51aea04dc8903250c095528ee4647aa9ba8e6))
+* **create-transation:** never returns 5xx status, better debug wirecard error responses ([730b6bd](https://github.com/ecomclub/app-wirecard/commit/730b6bd4667c453ae69462064c3393c5624e7559))
+
 ### [2.1.17](https://github.com/ecomplus/app-wirecard/compare/v2.1.16...v2.1.17) (2021-03-10)
 
 
