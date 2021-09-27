@@ -1,5 +1,6 @@
 {
   "name": "wirecard",
+  "private": true,
   "version": "2.2.6",
   "description": "",
   "main": "index.js",
