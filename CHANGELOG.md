@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.6](https://github.com/ecomplus/app-wirecard/compare/v2.2.5...v2.2.6) (2021-09-27)
+
+
+### Bug Fixes
+
+* **transactions-updater:** revert temp fixes, list orders up to 4 days only ([4e7c45c](https://github.com/ecomplus/app-wirecard/commit/4e7c45c06af076c39e5a846391a7463838713f14))
+
 ### [2.2.5](https://github.com/ecomclub/app-wirecard/compare/v2.2.4...v2.2.5) (2021-09-27)
 
 
