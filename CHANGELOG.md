@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.1](https://github.com/ecomclub/app-wirecard/compare/v2.2.0...v2.2.1) (2021-09-27)
+
+
+### Bug Fixes
+
+* fetch order from wirecard api instead using from dv ([26327ef](https://github.com/ecomclub/app-wirecard/commit/26327efff59c656932ea1317a927420537450c33))
+
 ## [2.2.0](https://github.com/ecomclub/app-wirecard/compare/v2.1.15...v2.2.0) (2021-09-26)
 
 
