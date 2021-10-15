@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.7](https://github.com/ecomplus/app-wirecard/compare/v2.2.6...v2.2.7) (2021-10-15)
+
+
+### Bug Fixes
+
+* **transaction-updater:** try to match more orders without overloading ([90785cb](https://github.com/ecomplus/app-wirecard/commit/90785cb61fba3d389804b2d62f19b11a3c1b4f98))
+
 ### [2.2.6](https://github.com/ecomplus/app-wirecard/compare/v2.2.5...v2.2.6) (2021-09-27)
 
 
