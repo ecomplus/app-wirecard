@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.9](https://github.com/ecomplus/app-wirecard/compare/v2.2.8...v2.2.9) (2021-10-21)
+
+
+### Bug Fixes
+
+* **deps:** update @ecomplus/application-sdk to v1.15.5 sqlite ([0fb7017](https://github.com/ecomplus/app-wirecard/commit/0fb70176c8f3fe62eb638537aaa50854e1ab4138))
+
 ### [2.2.8](https://github.com/ecomplus/app-wirecard/compare/v2.2.7...v2.2.8) (2021-10-15)
 
 ### [2.2.7](https://github.com/ecomplus/app-wirecard/compare/v2.2.6...v2.2.7) (2021-10-15)
