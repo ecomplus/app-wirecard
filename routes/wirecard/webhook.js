@@ -10,11 +10,15 @@ const getConfig = require('./../../lib/store-api/get-config')
 
 const notificationsQueue = []
 
-const getLastEntry = records => {
+const getLastEntry = (records, transactionId) => {
   // select last status record by date
   let statusRecord
   records.forEach(record => {
-    if (record && (!statusRecord || !record.date_time || record.date_time >= statusRecord.date_time)) {
+    if (
+      record &&
+      (!record.transaction_id || record.transaction_id === transactionId) &&
+      (!statusRecord || !record.date_time || record.date_time >= statusRecord.date_time)
+    ) {
       statusRecord = record
     }
   })
@@ -52,17 +56,18 @@ module.exports = appSdk => {
 
                 const orders = await appSdk.apiRequest(storeId, resource).then(({ response }) => response.data.result)
                 const order = orders[0]
-
-                const lastPaymentHistoryEntry = getLastEntry(order.payments_history)
-                if ((order && order.transactions) && (lastPaymentHistoryEntry.status !== parsePaymentStatus(body.status))) {
+                if (order && order.transactions) {
                   const transaction = order.transactions.find(({ intermediator }) => {
                     return intermediator && intermediator.transaction_code === payment.id
                   })
-
                   if (transaction) {
-                    if (!transaction.status ||
+                    const lastPaymentHistoryEntry = getLastEntry(order.payments_history, transaction._id)
+                    if (
+                      lastPaymentHistoryEntry.status !== parsePaymentStatus(body.status) &&
+                      (!transaction.status ||
                       transaction.status.current !== 'paid' ||
-                      transaction.status.current !== parsePaymentStatus(body.status)) {
+                      transaction.status.current !== parsePaymentStatus(body.status))
+                    ) {
                       const paymentsHistory = {
                         transaction_id: transaction._id,
                         date_time: new Date().toISOString(),
@@ -77,12 +82,10 @@ module.exports = appSdk => {
                       resource = `orders/${orders[0]._id}/payments_history.json`
                       return appSdk.apiRequest(storeId, resource, 'POST', paymentsHistory)
                     } else {
+                      // Entrada duplicada
                       return Promise.resolve()
                     }
                   }
-                } else {
-                  // Entrada duplicada
-                  return Promise.resolve()
                 }
 
                 if (!isRetry) {
