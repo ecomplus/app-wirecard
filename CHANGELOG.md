@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.10](https://github.com/ecomplus/app-wirecard/compare/v2.2.9...v2.2.10) (2021-12-27)
+
+
+### Bug Fixes
+
+* **wirecard-webhook:** check last payment history entry by transaction id only ([d3f3824](https://github.com/ecomplus/app-wirecard/commit/d3f38244a3341df02fa04ef9d05793fd7e559e7e))
+
 ### [2.2.9](https://github.com/ecomplus/app-wirecard/compare/v2.2.8...v2.2.9) (2021-10-21)
 
 
