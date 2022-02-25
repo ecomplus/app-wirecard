@@ -115,6 +115,13 @@
                 "maximum": 99999999,
                 "description": "Valor da taxa de parcelamento",
                 "title": "Valor da taxa"
+              },
+              "interest_free_min_amount": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 999999999,
+                "title": "Mínimo sem juros",
+                "description": "Montante mínimo para parcelamento sem juros"
               }
             },
             "title": "Parcelamento",
