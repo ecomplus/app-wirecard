@@ -120,7 +120,7 @@ module.exports = () => {
               }
 
               // max installments without tax
-              if ((installments.max_number_w_tax && installments.max_number_w_tax >= i) || installments.interest_free_min_amount > amount.total) {
+              if (installments.max_number_w_tax && installments.max_number_w_tax >= i && (!installments.interest_free_min_amount || installments.interest_free_min_amount <= amount.total)) {
                 taxValue = 0
               }
 
