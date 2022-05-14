@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.12](https://github.com/ecomplus/app-wirecard/compare/v2.2.11...v2.2.12) (2022-05-14)
+
+
+### Bug Fixes
+
+* **installment-tax:** skip addiational tax when installment number not gt 2 ([936997d](https://github.com/ecomplus/app-wirecard/commit/936997d2b91afc70e40987c4a76d5065a0d1a13b))
+
 ### [2.2.11](https://github.com/ecomplus/app-wirecard/compare/v2.2.10...v2.2.11) (2022-02-25)
 
 ### [2.2.10](https://github.com/ecomplus/app-wirecard/compare/v2.2.9...v2.2.10) (2021-12-27)
