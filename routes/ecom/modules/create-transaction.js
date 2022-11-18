@@ -27,7 +27,13 @@ module.exports = () => (req, res) => {
   }
 
   return authentications.get(storeId).then(auth => {
-    wConfig.accessToken = auth.w_access_token
+    if (config && config.token && config.key) {
+      wConfig.key = config.key
+      wConfig.token = config.token
+    }
+    if (!wConfig.token) {
+      wConfig.accessToken = auth.w_access_token
+    }
     const newOrder = parsePaymentBody(body)
     return createOrder(newOrder, wConfig)
   }).then((response) => {

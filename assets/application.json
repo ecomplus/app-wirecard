@@ -27,6 +27,33 @@
     "procedures": ["POST"]
   },
   "admin_settings": {
+    "key": {
+      "schema": {
+        "type": "string",
+        "maxLength": 255,
+        "title": "Chave de acesso",
+        "description": "Solicite ao suporte do moip key/chave de acesso"
+      },
+      "hide": true
+    },
+    "token": {
+      "schema": {
+        "type": "string",
+        "maxLength": 255,
+        "title": "Token",
+        "description": "Solicite ao suporte do moip token"
+      },
+      "hide": true
+    },
+    "public_key": {
+      "schema": {
+        "type": "string",
+        "maxLength": 460,
+        "title": "Chave Pública",
+        "description": "Solicite ao suporte do moip chave pública"
+      },
+      "hide": true
+    },
     "statement_descriptor": {
       "schema": {
         "type": "string",
