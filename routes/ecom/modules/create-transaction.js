@@ -13,7 +13,7 @@ const executePayment = require('./../../../lib/wirecard-api/execute-payment')
 // wirecard payment model
 const newPayment = require('./../../../lib/wirecard-api/new-payment')
 
-module.exports = () => (req, res) => {
+module.exports = () => async (req, res) => {
   const { storeId, body } = req
   // body was already pre-validated on @/bin/web.js
   // treat module request body
@@ -25,59 +25,58 @@ module.exports = () => (req, res) => {
   const wConfig = {
     production: (process.env.WC_SANDBOX !== 'true')
   }
-
-  return authentications.get(storeId).then(auth => {
-    if (config && config.token && config.key) {
-      wConfig.key = config.key
-      wConfig.token = config.token
-    }
-    if (!wConfig.token) {
-      wConfig.accessToken = auth.w_access_token
-    }
-    const newOrder = parsePaymentBody(body)
-    return createOrder(newOrder, wConfig)
-  }).then((response) => {
-    logger.log(`[Wirecard] > New order: ${response.body.id} / ${params.order_id} / #${storeId}`)
-    const order = response.body
-    const payment = newPayment(params.payment_method.code, params, config, params.domain)
-    return executePayment(order.id, payment, wConfig)
-  }).then((response) => {
-    logger.log(`[Wirecard] > Pay Order: ${response.body.id} / ${params.order_id} / #${storeId}`)
-    const payment = response.body
-    const model = moduleParse(payment)
-    // saving in db
-    res.send(model)
-    return transactions.save(payment.id, payment.status, storeId)
-  }).then(() => {
-    logger.log(`[Wirecard] > Payment complete / ${params.order_id} / #${storeId}`)
-  }).catch(err => {
-    logger.log(`CREATE_TRANSACTION_ERR: ${err.message} / ${params.order_id} / #${storeId}`)
-    if (err.name === 'AuthNotFound') {
-      return res.status(409).send({
-        error: 'AUTH_ERROR',
-        message: 'Authentication not found, please install the application again.'
-      })
-    } else {
-      if (err.response) {
-        const payload = {
-          message: err.message,
-          config: err.response.toJSON(),
-          order_id: params.order_id,
-          order_number: params.order_number,
-          store_id: storeId
-        }
-        logger.error('CREATE_TRANSACTION_ERR', JSON.stringify(payload, null, 2))
+  if (config && config.token && config.key) {
+    wConfig.key = config.key
+    wConfig.token = config.token
+  }
+  if (!wConfig.token) {
+    const auth = await authentications.get(storeId)
+    wConfig.accessToken = auth.w_access_token
+  }
+  const newOrder = parsePaymentBody(body)
+  return createOrder(newOrder, wConfig)
+    .then((response) => {
+      logger.log(`[Wirecard] > New order: ${response.body.id} / ${params.order_id} / #${storeId}`)
+      const order = response.body
+      const payment = newPayment(params.payment_method.code, params, config, params.domain)
+      return executePayment(order.id, payment, wConfig)
+    }).then((response) => {
+      logger.log(`[Wirecard] > Pay Order: ${response.body.id} / ${params.order_id} / #${storeId}`)
+      const payment = response.body
+      const model = moduleParse(payment)
+      // saving in db
+      res.send(model)
+      return transactions.save(payment.id, payment.status, storeId)
+    }).then(() => {
+      logger.log(`[Wirecard] > Payment complete / ${params.order_id} / #${storeId}`)
+    }).catch(err => {
+      logger.log(`CREATE_TRANSACTION_ERR: ${err.message} / ${params.order_id} / #${storeId}`)
+      if (err.name === 'AuthNotFound') {
+        return res.status(409).send({
+          error: 'AUTH_ERROR',
+          message: 'Authentication not found, please install the application again.'
+        })
       } else {
-        logger.error('CREATE_TRANSACTION_ERR', err)
+        if (err.response) {
+          const payload = {
+            message: err.message,
+            config: err.response.toJSON(),
+            order_id: params.order_id,
+            order_number: params.order_number,
+            store_id: storeId
+          }
+          logger.error('CREATE_TRANSACTION_ERR', JSON.stringify(payload, null, 2))
+        } else {
+          logger.error('CREATE_TRANSACTION_ERR', err)
+        }
       }
-    }
-    // return error status code
-    res.status(409)
-    return res.send({
-      error: 'CREATE_TRANSACTION_ERR',
-      message: `${(err.httpStatusCode || err.statusCode)}: ` + (err.response && err.response.message) || err.message
+      // return error status code
+      res.status(409)
+      return res.send({
+        error: 'CREATE_TRANSACTION_ERR',
+        message: `${(err.httpStatusCode || err.statusCode)}: ` + (err.response && err.response.message) || err.message
+      })
     })
-  })
 }
 
 const moduleParse = (payment) => {
