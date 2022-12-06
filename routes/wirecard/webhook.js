@@ -33,22 +33,28 @@ module.exports = appSdk => {
       notificationsQueue.push(payment.id)
 
       setTimeout(() => {
-        transactions.get(payment.id).then(transaction => {
+        transactions.get(payment.id).then(async transaction => {
           // get wirecard app auth
           storeId = transaction.store_id
-          return authentications.get(storeId).then(auth => ({ transaction, auth }))
-        }).then(({ transaction, auth }) => {
+          const appConfig = await getConfig({ appSdk, storeId }, true)
+          const wirecardConfig = {
+            production: true
+          }
+          if (appConfig && appConfig.token && appConfig.key) {
+            wirecardConfig.key = appConfig.key
+            wirecardConfig.token = appConfig.token
+          }
+          if (!wirecardConfig.token) {
+            const auth = await authentications.get(storeId)
+            wirecardConfig.accessToken = auth.w_access_token
+          }
+
+          if (appConfig.sandbox && appConfig.sandbox === true) {
+            wirecardConfig.production = false
+          }
+          return ({ transaction }, wirecardConfig)
+        }).then(({ transaction }, wirecardConfig) => {
           const request = async (isRetry) => {
-            const appConfig = await getConfig({ appSdk, storeId }, true)
-            const wirecardConfig = {
-              accessToken: auth.w_access_token,
-              production: true
-            }
-
-            if (appConfig.sandbox && appConfig.sandbox === true) {
-              wirecardConfig.production = false
-            }
-
             return fetchPayment(payment.id, wirecardConfig)
               .then(async ({ body }) => {
                 let resource = `orders.json?transactions.intermediator.transaction_code=${transaction.transaction_id}` +
