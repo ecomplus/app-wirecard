@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/ecomplus/app-wirecard/compare/v2.2.12...v2.3.0) (2022-12-06)
+
+
+### Features
+
+* **authorization:** accept configured wirecard token in addition to oauth ([#34](https://github.com/ecomplus/app-wirecard/issues/34)) ([9415dd2](https://github.com/ecomplus/app-wirecard/commit/9415dd2ee1813792335e1204ba30a6f5d706a0b9))
+
+
+### Bug Fixes
+
+* better describing manual auth fields ([eec9e1b](https://github.com/ecomplus/app-wirecard/commit/eec9e1b5e774d71e7cca5ed591144bd1643332fd))
+
 ### [2.2.12](https://github.com/ecomplus/app-wirecard/compare/v2.2.11...v2.2.12) (2022-05-14)
 
 
