@@ -27,33 +27,6 @@
     "procedures": ["POST"]
   },
   "admin_settings": {
-    "key": {
-      "schema": {
-        "type": "string",
-        "maxLength": 255,
-        "title": "Chave de acesso",
-        "description": "Solicite ao suporte do moip key/chave de acesso"
-      },
-      "hide": true
-    },
-    "token": {
-      "schema": {
-        "type": "string",
-        "maxLength": 255,
-        "title": "Token",
-        "description": "Solicite ao suporte do moip token"
-      },
-      "hide": true
-    },
-    "public_key": {
-      "schema": {
-        "type": "string",
-        "maxLength": 460,
-        "title": "Chave Pública",
-        "description": "Solicite ao suporte do moip chave pública"
-      },
-      "hide": true
-    },
     "statement_descriptor": {
       "schema": {
         "type": "string",
@@ -226,6 +199,33 @@
         "description": "Desconto a ser aplicado para pagamentos realizados com boletos"
       },
       "hide": false
+    },
+    "key": {
+      "schema": {
+        "type": "string",
+        "maxLength": 255,
+        "title": "Chave de acesso (opcional)",
+        "description": "Preencha os campos abaixo se a autorização em nova aba (OAuth) acusar erro, solicite a chave para API ao suporte do Moip"
+      },
+      "hide": true
+    },
+    "token": {
+      "schema": {
+        "type": "string",
+        "maxLength": 255,
+        "title": "Token (opcional)",
+        "description": "Solicite o token para API ao suporte do Moip"
+      },
+      "hide": true
+    },
+    "public_key": {
+      "schema": {
+        "type": "string",
+        "maxLength": 460,
+        "title": "Chave pública",
+        "description": "Preencha apenas para autenticação manual, solicite a chave pública ao suporte do Moip"
+      },
+      "hide": true
     }
   }
 }
